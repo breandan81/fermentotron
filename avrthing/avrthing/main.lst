@@ -1,0 +1,185 @@
+   1               		.file	"main.cpp"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.section	.rodata.str1.1,"aMS",@progbits,1
+  10               	.LC0:
+  11 0000 7069 6E20 		.string	"pin %d = %d or %d deg C read %d times ADCSRB = %x ADMUX = %x 1<<6 = %x \n\r"
+  11      2564 203D 
+  11      2025 6420 
+  11      6F72 2025 
+  11      6420 6465 
+  12               		.section	.text.startup,"ax",@progbits
+  13               	.global	main
+  15               	main:
+  16               	.LFB2:
+  17               		.file 1 "main.cpp"
+   1:main.cpp      **** #include "avrthing.h"
+   2:main.cpp      **** #include <stdio.h>
+   3:main.cpp      **** #include "analogIO.h"
+   4:main.cpp      **** #include "digitalIO.h"
+   5:main.cpp      **** #include <avr/pgmspace.h>
+   6:main.cpp      **** #include "pins/awesomedip.h"
+   7:main.cpp      **** int main(void)
+   8:main.cpp      **** {
+  18               		.loc 1 8 0
+  19               	/* prologue: function */
+  20               	/* frame size = 0 */
+  21               	/* stack size = 0 */
+  22               	.L__stack_usage = 0
+  23               	.LBB2:
+   9:main.cpp      **** 	
+  10:main.cpp      **** 	int i = 0;
+  11:main.cpp      **** 	int pin = 0;
+  12:main.cpp      **** 	initUSBSerial();
+  24               		.loc 1 12 0
+  25 0000 0E94 0000 		call initUSBSerial
+  13:main.cpp      **** 	initRTC();
+  26               		.loc 1 13 0
+  27 0004 0E94 0000 		call _Z7initRTCv
+  14:main.cpp      ****  	
+  15:main.cpp      **** 	analogSetup();	
+  28               		.loc 1 15 0
+  29 0008 0E94 0000 		call _Z11analogSetupv
+  16:main.cpp      **** 	setRefVCC();
+  30               		.loc 1 16 0
+  31 000c 0E94 0000 		call _Z9setRefVCCv
+  17:main.cpp      **** 	pin = setPin(37);
+  32               		.loc 1 17 0
+  33 0010 85E2      		ldi r24,lo8(37)
+  34 0012 90E0      		ldi r25,0
+  35 0014 0E94 0000 		call _Z6setPins
+  36 0018 982E      		mov r9,r24
+  37 001a 892E      		mov r8,r25
+  10:main.cpp      **** 	int i = 0;
+  38               		.loc 1 10 0
+  39 001c C0E0      		ldi r28,0
+  40 001e D0E0      		ldi r29,0
+  41               	.LBB3:
+  18:main.cpp      **** 
+  19:main.cpp      **** 	while(true)
+  20:main.cpp      **** 	{
+  21:main.cpp      **** 		short temp = convert();
+  22:main.cpp      **** 		printf("pin %d = %d or %d deg C read %d times ADCSRB = %x ADMUX = %x 1<<6 = %x \n\r", pin, temp, 
+  42               		.loc 1 22 0
+  43 0020 80E4      		ldi r24,lo8(64)
+  44 0022 782E      		mov r7,r24
+  45 0024 C12C      		mov r12,__zero_reg__
+  46 0026 94E0      		ldi r25,lo8(4)
+  47 0028 D92E      		mov r13,r25
+  48 002a E12C      		mov r14,__zero_reg__
+  49 002c F12C      		mov r15,__zero_reg__
+  50 002e 00E0      		ldi r16,lo8(.LC0)
+  51 0030 10E0      		ldi r17,hi8(.LC0)
+  52               	.L2:
+  21:main.cpp      **** 		short temp = convert();
+  53               		.loc 1 21 0 discriminator 1
+  54 0032 0E94 0000 		call _Z7convertv
+  55 0036 B82E      		mov r11,r24
+  56 0038 A92E      		mov r10,r25
+  57               		.loc 1 22 0 discriminator 1
+  58 003a 9091 7C00 		lds r25,124
+  59 003e 8091 7B00 		lds r24,123
+  60 0042 1F92      		push __zero_reg__
+  61               	.LCFI0:
+  62 0044 7F92      		push r7
+  63               	.LCFI1:
+  64 0046 1F92      		push __zero_reg__
+  65               	.LCFI2:
+  66 0048 9F93      		push r25
+  67               	.LCFI3:
+  68 004a 1F92      		push __zero_reg__
+  69               	.LCFI4:
+  70 004c 8F93      		push r24
+  71               	.LCFI5:
+  72 004e DF93      		push r29
+  73               	.LCFI6:
+  74 0050 CF93      		push r28
+  75               	.LCFI7:
+  76 0052 24EF      		ldi r18,lo8(-12)
+  77 0054 31E0      		ldi r19,lo8(1)
+  78 0056 AB2D      		mov r26,r11
+  79 0058 BA2D      		mov r27,r10
+  80 005a 0E94 0000 		call __usmulhisi3
+  81 005e A701      		movw r20,r14
+  82 0060 9601      		movw r18,r12
+  83 0062 0E94 0000 		call __divmodsi4
+  84 0066 2151      		subi r18,17
+  85 0068 3140      		sbci r19,1
+  86 006a 3F93      		push r19
+  87               	.LCFI8:
+  88 006c 2F93      		push r18
+  89               	.LCFI9:
+  90 006e AF92      		push r10
+  91               	.LCFI10:
+  92 0070 BF92      		push r11
+  93               	.LCFI11:
+  94 0072 8F92      		push r8
+  95               	.LCFI12:
+  96 0074 9F92      		push r9
+  97               	.LCFI13:
+  98 0076 1F93      		push r17
+  99               	.LCFI14:
+ 100 0078 0F93      		push r16
+ 101               	.LCFI15:
+ 102 007a 0E94 0000 		call printf
+  23:main.cpp      **** 		setDirection(8, 1);
+ 103               		.loc 1 23 0 discriminator 1
+ 104 007e 61E0      		ldi r22,lo8(1)
+ 105 0080 88E0      		ldi r24,lo8(8)
+ 106 0082 0E94 0000 		call _Z12setDirectioncc
+  24:main.cpp      **** 		digitalWrite(8,1);
+ 107               		.loc 1 24 0 discriminator 1
+ 108 0086 61E0      		ldi r22,lo8(1)
+ 109 0088 88E0      		ldi r24,lo8(8)
+ 110 008a 0E94 0000 		call _Z12digitalWritecc
+  25:main.cpp      **** 		delayMillis(100);
+ 111               		.loc 1 25 0 discriminator 1
+ 112 008e 84E6      		ldi r24,lo8(100)
+ 113 0090 90E0      		ldi r25,0
+ 114 0092 0E94 0000 		call _Z11delayMillisj
+  26:main.cpp      **** 		i++;
+ 115               		.loc 1 26 0 discriminator 1
+ 116 0096 2196      		adiw r28,1
+ 117 0098 8DB7      		in r24,__SP_L__
+ 118 009a 9EB7      		in r25,__SP_H__
+ 119 009c 4096      		adiw r24,16
+ 120 009e 0FB6      		in __tmp_reg__,__SREG__
+ 121 00a0 F894      		cli
+ 122 00a2 9EBF      		out __SP_H__,r25
+ 123 00a4 0FBE      		out __SREG__,__tmp_reg__
+ 124 00a6 8DBF      		out __SP_L__,r24
+ 125               	.LCFI16:
+ 126 00a8 00C0      		rjmp .L2
+ 127               	.LBE3:
+ 128               	.LBE2:
+ 129               	.LFE2:
+ 225               	.Letext0:
+ 226               		.file 2 "pins/awesomedip.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.cpp
+     /tmp/ccjMrShJ.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccjMrShJ.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccjMrShJ.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccjMrShJ.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccjMrShJ.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccjMrShJ.s:15     .text.startup:0000000000000000 main
+
+UNDEFINED SYMBOLS
+initUSBSerial
+_Z7initRTCv
+_Z11analogSetupv
+_Z9setRefVCCv
+_Z6setPins
+_Z7convertv
+__usmulhisi3
+__divmodsi4
+printf
+_Z12setDirectioncc
+_Z12digitalWritecc
+_Z11delayMillisj
+__do_copy_data

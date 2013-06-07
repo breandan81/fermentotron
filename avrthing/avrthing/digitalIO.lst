@@ -1,0 +1,551 @@
+   1               		.file	"digitalIO.cpp"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               	.global	_Z7getPORTi
+  11               	_Z7getPORTi:
+  12               	.LFB2:
+  13               		.file 1 "digitalIO.cpp"
+   1:digitalIO.cpp **** #include "avrthing.h"
+   2:digitalIO.cpp **** #include <avr/io.h>
+   3:digitalIO.cpp **** #include "pins/awesomedip.h"
+   4:digitalIO.cpp **** #define NULL 0
+   5:digitalIO.cpp **** 
+   6:digitalIO.cpp **** 
+   7:digitalIO.cpp **** 
+   8:digitalIO.cpp **** 
+   9:digitalIO.cpp **** volatile uint8_t *outs[7] = {NULL, NULL, &PORTB, &PORTC, &PORTD, &PORTE, &PORTF}; 
+  10:digitalIO.cpp **** volatile uint8_t *ins[7]  = {NULL, NULL, &PINB, &PINC, &PIND, &PINE, &PINF}; 
+  11:digitalIO.cpp **** volatile uint8_t *ddrs[7] = {NULL, NULL, &DDRB, &DDRC, &DDRD, &DDRE, &DDRF}; 
+  12:digitalIO.cpp **** 
+  13:digitalIO.cpp **** volatile uint8_t *getPORT(int x);
+  14:digitalIO.cpp **** volatile uint8_t *getDDR(int x);
+  15:digitalIO.cpp **** volatile uint8_t *getPIN(int x);
+  16:digitalIO.cpp **** 
+  17:digitalIO.cpp **** 
+  18:digitalIO.cpp **** #define maxPin 40
+  19:digitalIO.cpp **** #include <stdio.h>
+  20:digitalIO.cpp **** 
+  21:digitalIO.cpp **** volatile uint8_t *getPORT(int x)
+  22:digitalIO.cpp **** {
+  14               		.loc 1 22 0
+  15               	.LVL0:
+  16               	/* prologue: function */
+  17               	/* frame size = 0 */
+  18               	/* stack size = 0 */
+  19               	.L__stack_usage = 0
+  23:digitalIO.cpp **** 	if(x > maxPin)
+  20               		.loc 1 23 0
+  21 0000 8932      		cpi r24,41
+  22 0002 9105      		cpc r25,__zero_reg__
+  23 0004 04F4      		brge .L3
+  24:digitalIO.cpp **** 		return NULL;
+  25:digitalIO.cpp **** 
+  26:digitalIO.cpp **** 	else
+  27:digitalIO.cpp **** 	{	
+  28:digitalIO.cpp **** 		return outs[pins[x-1] >>4];
+  24               		.loc 1 28 0
+  25 0006 FC01      		movw r30,r24
+  26 0008 E050      		subi r30,lo8(-(_ZL4pins-1))
+  27 000a F040      		sbci r31,hi8(-(_ZL4pins-1))
+  28 000c E081      		ld r30,Z
+  29 000e F0E0      		ldi r31,0
+  30 0010 84E0      		ldi r24,4
+  31               		1:
+  32 0012 F595      		asr r31
+  33 0014 E795      		ror r30
+  34 0016 8A95      		dec r24
+  35 0018 01F4      		brne 1b
+  36               	.LVL1:
+  37 001a EE0F      		lsl r30
+  38 001c FF1F      		rol r31
+  39 001e E050      		subi r30,lo8(-(outs))
+  40 0020 F040      		sbci r31,hi8(-(outs))
+  41 0022 2081      		ld r18,Z
+  42 0024 3181      		ldd r19,Z+1
+  43 0026 00C0      		rjmp .L2
+  44               	.LVL2:
+  45               	.L3:
+  24:digitalIO.cpp **** 		return NULL;
+  46               		.loc 1 24 0
+  47 0028 20E0      		ldi r18,0
+  48 002a 30E0      		ldi r19,0
+  49               	.LVL3:
+  50               	.L2:
+  29:digitalIO.cpp **** 	}
+  30:digitalIO.cpp **** }
+  51               		.loc 1 30 0
+  52 002c C901      		movw r24,r18
+  53 002e 0895      		ret
+  54               	.LFE2:
+  56               	.global	_Z6getPINi
+  58               	_Z6getPINi:
+  59               	.LFB3:
+  31:digitalIO.cpp **** volatile uint8_t *getPIN(int x)
+  32:digitalIO.cpp **** {
+  60               		.loc 1 32 0
+  61               	.LVL4:
+  62               	/* prologue: function */
+  63               	/* frame size = 0 */
+  64               	/* stack size = 0 */
+  65               	.L__stack_usage = 0
+  33:digitalIO.cpp **** 
+  34:digitalIO.cpp **** 	if(x > maxPin)
+  66               		.loc 1 34 0
+  67 0030 8932      		cpi r24,41
+  68 0032 9105      		cpc r25,__zero_reg__
+  69 0034 04F4      		brge .L6
+  35:digitalIO.cpp **** 		return NULL;
+  36:digitalIO.cpp **** 
+  37:digitalIO.cpp **** 	else
+  38:digitalIO.cpp **** 	{
+  39:digitalIO.cpp **** 		return ins[pins[x-1] >> 4];
+  70               		.loc 1 39 0
+  71 0036 FC01      		movw r30,r24
+  72 0038 E050      		subi r30,lo8(-(_ZL4pins-1))
+  73 003a F040      		sbci r31,hi8(-(_ZL4pins-1))
+  74 003c E081      		ld r30,Z
+  75 003e F0E0      		ldi r31,0
+  76 0040 24E0      		ldi r18,4
+  77               		1:
+  78 0042 F595      		asr r31
+  79 0044 E795      		ror r30
+  80 0046 2A95      		dec r18
+  81 0048 01F4      		brne 1b
+  82 004a EE0F      		lsl r30
+  83 004c FF1F      		rol r31
+  84 004e E050      		subi r30,lo8(-(ins))
+  85 0050 F040      		sbci r31,hi8(-(ins))
+  86 0052 2081      		ld r18,Z
+  87 0054 3181      		ldd r19,Z+1
+  88 0056 00C0      		rjmp .L5
+  89               	.L6:
+  35:digitalIO.cpp **** 		return NULL;
+  90               		.loc 1 35 0
+  91 0058 20E0      		ldi r18,0
+  92 005a 30E0      		ldi r19,0
+  93               	.L5:
+  40:digitalIO.cpp **** 	}
+  41:digitalIO.cpp **** }
+  94               		.loc 1 41 0
+  95 005c C901      		movw r24,r18
+  96               	.LVL5:
+  97 005e 0895      		ret
+  98               	.LFE3:
+ 100               	.global	_Z6getDDRi
+ 102               	_Z6getDDRi:
+ 103               	.LFB4:
+  42:digitalIO.cpp **** 
+  43:digitalIO.cpp **** volatile uint8_t *getDDR(int x)
+  44:digitalIO.cpp **** {
+ 104               		.loc 1 44 0
+ 105               	.LVL6:
+ 106               	/* prologue: function */
+ 107               	/* frame size = 0 */
+ 108               	/* stack size = 0 */
+ 109               	.L__stack_usage = 0
+  45:digitalIO.cpp **** 	if(x > maxPin)
+ 110               		.loc 1 45 0
+ 111 0060 8932      		cpi r24,41
+ 112 0062 9105      		cpc r25,__zero_reg__
+ 113 0064 04F4      		brge .L9
+  46:digitalIO.cpp **** 		return NULL;
+  47:digitalIO.cpp **** 
+  48:digitalIO.cpp **** 	else
+  49:digitalIO.cpp **** 		return ddrs[pins[x-1] >> 4];
+ 114               		.loc 1 49 0
+ 115 0066 FC01      		movw r30,r24
+ 116 0068 E050      		subi r30,lo8(-(_ZL4pins-1))
+ 117 006a F040      		sbci r31,hi8(-(_ZL4pins-1))
+ 118 006c E081      		ld r30,Z
+ 119 006e F0E0      		ldi r31,0
+ 120 0070 44E0      		ldi r20,4
+ 121               		1:
+ 122 0072 F595      		asr r31
+ 123 0074 E795      		ror r30
+ 124 0076 4A95      		dec r20
+ 125 0078 01F4      		brne 1b
+ 126 007a EE0F      		lsl r30
+ 127 007c FF1F      		rol r31
+ 128 007e E050      		subi r30,lo8(-(ddrs))
+ 129 0080 F040      		sbci r31,hi8(-(ddrs))
+ 130 0082 2081      		ld r18,Z
+ 131 0084 3181      		ldd r19,Z+1
+ 132 0086 00C0      		rjmp .L8
+ 133               	.L9:
+  46:digitalIO.cpp **** 		return NULL;
+ 134               		.loc 1 46 0
+ 135 0088 20E0      		ldi r18,0
+ 136 008a 30E0      		ldi r19,0
+ 137               	.L8:
+  50:digitalIO.cpp **** }
+ 138               		.loc 1 50 0
+ 139 008c C901      		movw r24,r18
+ 140               	.LVL7:
+ 141 008e 0895      		ret
+ 142               	.LFE4:
+ 144               	.global	_Z12digitalWritecc
+ 146               	_Z12digitalWritecc:
+ 147               	.LFB5:
+  51:digitalIO.cpp **** 
+  52:digitalIO.cpp **** int digitalWrite(char pin, char val)
+  53:digitalIO.cpp **** {
+ 148               		.loc 1 53 0
+ 149               	.LVL8:
+ 150 0090 CF93      		push r28
+ 151               	.LCFI0:
+ 152 0092 DF93      		push r29
+ 153               	.LCFI1:
+ 154               	/* prologue: function */
+ 155               	/* frame size = 0 */
+ 156               	/* stack size = 2 */
+ 157               	.L__stack_usage = 2
+  54:digitalIO.cpp **** 	if(pin > maxPin)
+ 158               		.loc 1 54 0
+ 159 0094 8932      		cpi r24,lo8(41)
+ 160 0096 00F4      		brsh .L13
+ 161 0098 C82F      		mov r28,r24
+ 162 009a D0E0      		ldi r29,0
+  55:digitalIO.cpp **** 		return -1;
+  56:digitalIO.cpp **** 	if(val)
+  57:digitalIO.cpp **** 		*getPORT(pin) |= _BV(pins[pin-1] & 0xF);
+ 163               		.loc 1 57 0
+ 164 009c CE01      		movw r24,r28
+ 165               	.LVL9:
+  56:digitalIO.cpp **** 	if(val)
+ 166               		.loc 1 56 0
+ 167 009e 6623      		tst r22
+ 168 00a0 01F0      		breq .L12
+ 169               		.loc 1 57 0
+ 170 00a2 0E94 0000 		call _Z7getPORTi
+ 171               	.LVL10:
+ 172 00a6 FC01      		movw r30,r24
+ 173 00a8 4081      		ld r20,Z
+ 174 00aa C050      		subi r28,lo8(-(_ZL4pins-1))
+ 175 00ac D040      		sbci r29,hi8(-(_ZL4pins-1))
+ 176               	.LVL11:
+ 177 00ae 5881      		ld r21,Y
+ 178 00b0 5F70      		andi r21,lo8(15)
+ 179 00b2 21E0      		ldi r18,lo8(1)
+ 180 00b4 30E0      		ldi r19,0
+ 181 00b6 052E      		mov r0,r21
+ 182 00b8 00C0      		rjmp 2f
+ 183               		1:
+ 184 00ba 220F      		lsl r18
+ 185               		2:
+ 186 00bc 0A94      		dec r0
+ 187 00be 02F4      		brpl 1b
+ 188 00c0 422B      		or r20,r18
+ 189 00c2 00C0      		rjmp .L14
+ 190               	.LVL12:
+ 191               	.L12:
+  58:digitalIO.cpp **** 	else
+  59:digitalIO.cpp **** 		*getPORT(pin) &= ~_BV(pins[pin-1] & 0xF);
+ 192               		.loc 1 59 0
+ 193 00c4 0E94 0000 		call _Z7getPORTi
+ 194               	.LVL13:
+ 195 00c8 FC01      		movw r30,r24
+ 196 00ca 4081      		ld r20,Z
+ 197 00cc C050      		subi r28,lo8(-(_ZL4pins-1))
+ 198 00ce D040      		sbci r29,hi8(-(_ZL4pins-1))
+ 199               	.LVL14:
+ 200 00d0 5881      		ld r21,Y
+ 201 00d2 5F70      		andi r21,lo8(15)
+ 202 00d4 21E0      		ldi r18,lo8(1)
+ 203 00d6 30E0      		ldi r19,0
+ 204 00d8 052E      		mov r0,r21
+ 205 00da 00C0      		rjmp 2f
+ 206               		1:
+ 207 00dc 220F      		lsl r18
+ 208               		2:
+ 209 00de 0A94      		dec r0
+ 210 00e0 02F4      		brpl 1b
+ 211 00e2 2095      		com r18
+ 212 00e4 4223      		and r20,r18
+ 213               	.L14:
+ 214 00e6 4083      		st Z,r20
+  60:digitalIO.cpp **** 	return 0;
+ 215               		.loc 1 60 0
+ 216 00e8 20E0      		ldi r18,0
+ 217 00ea 30E0      		ldi r19,0
+ 218 00ec 00C0      		rjmp .L11
+ 219               	.LVL15:
+ 220               	.L13:
+  55:digitalIO.cpp **** 		return -1;
+ 221               		.loc 1 55 0
+ 222 00ee 2FEF      		ldi r18,lo8(-1)
+ 223 00f0 3FEF      		ldi r19,lo8(-1)
+ 224               	.LVL16:
+ 225               	.L11:
+  61:digitalIO.cpp **** }
+ 226               		.loc 1 61 0
+ 227 00f2 C901      		movw r24,r18
+ 228               	/* epilogue start */
+ 229 00f4 DF91      		pop r29
+ 230 00f6 CF91      		pop r28
+ 231 00f8 0895      		ret
+ 232               	.LFE5:
+ 234               	.global	_Z12setDirectioncc
+ 236               	_Z12setDirectioncc:
+ 237               	.LFB6:
+  62:digitalIO.cpp **** 
+  63:digitalIO.cpp **** int setDirection(char pin, char val)
+  64:digitalIO.cpp **** {
+ 238               		.loc 1 64 0
+ 239               	.LVL17:
+ 240 00fa CF93      		push r28
+ 241               	.LCFI2:
+ 242 00fc DF93      		push r29
+ 243               	.LCFI3:
+ 244               	/* prologue: function */
+ 245               	/* frame size = 0 */
+ 246               	/* stack size = 2 */
+ 247               	.L__stack_usage = 2
+  65:digitalIO.cpp **** 	if(pin > maxPin)
+ 248               		.loc 1 65 0
+ 249 00fe 8932      		cpi r24,lo8(41)
+ 250 0100 00F4      		brsh .L18
+ 251 0102 C82F      		mov r28,r24
+ 252 0104 D0E0      		ldi r29,0
+  66:digitalIO.cpp **** 		return -1;
+  67:digitalIO.cpp **** 
+  68:digitalIO.cpp **** 	if(val)
+  69:digitalIO.cpp **** 		*getDDR(pin) |= _BV(pins[pin-1] & 0xF);
+ 253               		.loc 1 69 0
+ 254 0106 CE01      		movw r24,r28
+ 255               	.LVL18:
+  68:digitalIO.cpp **** 	if(val)
+ 256               		.loc 1 68 0
+ 257 0108 6623      		tst r22
+ 258 010a 01F0      		breq .L17
+ 259               		.loc 1 69 0
+ 260 010c 0E94 0000 		call _Z6getDDRi
+ 261               	.LVL19:
+ 262 0110 FC01      		movw r30,r24
+ 263 0112 4081      		ld r20,Z
+ 264 0114 C050      		subi r28,lo8(-(_ZL4pins-1))
+ 265 0116 D040      		sbci r29,hi8(-(_ZL4pins-1))
+ 266               	.LVL20:
+ 267 0118 5881      		ld r21,Y
+ 268 011a 5F70      		andi r21,lo8(15)
+ 269 011c 21E0      		ldi r18,lo8(1)
+ 270 011e 30E0      		ldi r19,0
+ 271 0120 052E      		mov r0,r21
+ 272 0122 00C0      		rjmp 2f
+ 273               		1:
+ 274 0124 220F      		lsl r18
+ 275               		2:
+ 276 0126 0A94      		dec r0
+ 277 0128 02F4      		brpl 1b
+ 278 012a 422B      		or r20,r18
+ 279 012c 00C0      		rjmp .L19
+ 280               	.LVL21:
+ 281               	.L17:
+  70:digitalIO.cpp **** 	else
+  71:digitalIO.cpp **** 		*getDDR(pin) &= ~_BV(pins[pin-1] & 0xF);
+ 282               		.loc 1 71 0
+ 283 012e 0E94 0000 		call _Z6getDDRi
+ 284               	.LVL22:
+ 285 0132 FC01      		movw r30,r24
+ 286 0134 4081      		ld r20,Z
+ 287 0136 C050      		subi r28,lo8(-(_ZL4pins-1))
+ 288 0138 D040      		sbci r29,hi8(-(_ZL4pins-1))
+ 289               	.LVL23:
+ 290 013a 5881      		ld r21,Y
+ 291 013c 5F70      		andi r21,lo8(15)
+ 292 013e 21E0      		ldi r18,lo8(1)
+ 293 0140 30E0      		ldi r19,0
+ 294 0142 052E      		mov r0,r21
+ 295 0144 00C0      		rjmp 2f
+ 296               		1:
+ 297 0146 220F      		lsl r18
+ 298               		2:
+ 299 0148 0A94      		dec r0
+ 300 014a 02F4      		brpl 1b
+ 301 014c 2095      		com r18
+ 302 014e 4223      		and r20,r18
+ 303               	.L19:
+ 304 0150 4083      		st Z,r20
+  72:digitalIO.cpp **** 	return 0;
+ 305               		.loc 1 72 0
+ 306 0152 20E0      		ldi r18,0
+ 307 0154 30E0      		ldi r19,0
+ 308 0156 00C0      		rjmp .L16
+ 309               	.LVL24:
+ 310               	.L18:
+  66:digitalIO.cpp **** 		return -1;
+ 311               		.loc 1 66 0
+ 312 0158 2FEF      		ldi r18,lo8(-1)
+ 313 015a 3FEF      		ldi r19,lo8(-1)
+ 314               	.LVL25:
+ 315               	.L16:
+  73:digitalIO.cpp **** }
+ 316               		.loc 1 73 0
+ 317 015c C901      		movw r24,r18
+ 318               	/* epilogue start */
+ 319 015e DF91      		pop r29
+ 320 0160 CF91      		pop r28
+ 321 0162 0895      		ret
+ 322               	.LFE6:
+ 324               	.global	_Z11digitalReadc
+ 326               	_Z11digitalReadc:
+ 327               	.LFB7:
+  74:digitalIO.cpp **** 
+  75:digitalIO.cpp **** int digitalRead(char pin)
+  76:digitalIO.cpp **** {
+ 328               		.loc 1 76 0
+ 329               	.LVL26:
+ 330 0164 CF93      		push r28
+ 331               	.LCFI4:
+ 332 0166 DF93      		push r29
+ 333               	.LCFI5:
+ 334               	/* prologue: function */
+ 335               	/* frame size = 0 */
+ 336               	/* stack size = 2 */
+ 337               	.L__stack_usage = 2
+  77:digitalIO.cpp **** 
+  78:digitalIO.cpp **** 	if(pin > maxPin)
+ 338               		.loc 1 78 0
+ 339 0168 8932      		cpi r24,lo8(41)
+ 340 016a 00F4      		brsh .L22
+  79:digitalIO.cpp **** 		return -1;
+  80:digitalIO.cpp **** 
+  81:digitalIO.cpp **** 	return (*getPIN(pin) >> (pins[pin-1] & 0xF)) &1;
+ 341               		.loc 1 81 0
+ 342 016c C82F      		mov r28,r24
+ 343 016e D0E0      		ldi r29,0
+ 344 0170 CE01      		movw r24,r28
+ 345               	.LVL27:
+ 346 0172 0E94 0000 		call _Z6getPINi
+ 347               	.LVL28:
+ 348 0176 FC01      		movw r30,r24
+ 349 0178 2081      		ld r18,Z
+ 350 017a 30E0      		ldi r19,0
+ 351 017c C050      		subi r28,lo8(-(_ZL4pins-1))
+ 352 017e D040      		sbci r29,hi8(-(_ZL4pins-1))
+ 353               	.LVL29:
+ 354 0180 8881      		ld r24,Y
+ 355 0182 8F70      		andi r24,lo8(15)
+ 356 0184 00C0      		rjmp 2f
+ 357               		1:
+ 358 0186 3595      		asr r19
+ 359 0188 2795      		ror r18
+ 360               		2:
+ 361 018a 8A95      		dec r24
+ 362 018c 02F4      		brpl 1b
+ 363 018e 2170      		andi r18,1
+ 364 0190 3327      		clr r19
+ 365 0192 00C0      		rjmp .L21
+ 366               	.LVL30:
+ 367               	.L22:
+  79:digitalIO.cpp **** 		return -1;
+ 368               		.loc 1 79 0
+ 369 0194 2FEF      		ldi r18,lo8(-1)
+ 370 0196 3FEF      		ldi r19,lo8(-1)
+ 371               	.LVL31:
+ 372               	.L21:
+  82:digitalIO.cpp **** }
+ 373               		.loc 1 82 0
+ 374 0198 C901      		movw r24,r18
+ 375               	/* epilogue start */
+ 376 019a DF91      		pop r29
+ 377 019c CF91      		pop r28
+ 378 019e 0895      		ret
+ 379               	.LFE7:
+ 381               	.global	ddrs
+ 382               		.data
+ 385               	ddrs:
+ 386 0000 0000      		.word	0
+ 387 0002 0000      		.word	0
+ 388 0004 2400      		.word	36
+ 389 0006 2700      		.word	39
+ 390 0008 2A00      		.word	42
+ 391 000a 2D00      		.word	45
+ 392 000c 3000      		.word	48
+ 393               	.global	ins
+ 396               	ins:
+ 397 000e 0000      		.word	0
+ 398 0010 0000      		.word	0
+ 399 0012 2300      		.word	35
+ 400 0014 2600      		.word	38
+ 401 0016 2900      		.word	41
+ 402 0018 2C00      		.word	44
+ 403 001a 2F00      		.word	47
+ 404               	.global	outs
+ 407               	outs:
+ 408 001c 0000      		.word	0
+ 409 001e 0000      		.word	0
+ 410 0020 2500      		.word	37
+ 411 0022 2800      		.word	40
+ 412 0024 2B00      		.word	43
+ 413 0026 2E00      		.word	46
+ 414 0028 3100      		.word	49
+ 415               		.section	.rodata
+ 418               	_ZL4pins:
+ 419 0000 56        		.byte	86
+ 420 0001 00        		.byte	0
+ 421 0002 00        		.byte	0
+ 422 0003 00        		.byte	0
+ 423 0004 00        		.byte	0
+ 424 0005 00        		.byte	0
+ 425 0006 00        		.byte	0
+ 426 0007 20        		.byte	32
+ 427 0008 21        		.byte	33
+ 428 0009 22        		.byte	34
+ 429 000a 23        		.byte	35
+ 430 000b 27        		.byte	39
+ 431 000c 00        		.byte	0
+ 432 000d 00        		.byte	0
+ 433 000e 00        		.byte	0
+ 434 000f 40        		.byte	64
+ 435 0010 41        		.byte	65
+ 436 0011 42        		.byte	66
+ 437 0012 43        		.byte	67
+ 438 0013 45        		.byte	69
+ 439 0014 00        		.byte	0
+ 440 0015 44        		.byte	68
+ 441 0016 46        		.byte	70
+ 442 0017 47        		.byte	71
+ 443 0018 44        		.byte	68
+ 444 0019 45        		.byte	69
+ 445 001a 46        		.byte	70
+ 446 001b 47        		.byte	71
+ 447 001c 52        		.byte	82
+ 448 001d 00        		.byte	0
+ 449 001e 36        		.byte	54
+ 450 001f 00        		.byte	0
+ 451 0020 67        		.byte	103
+ 452 0021 65        		.byte	101
+ 453 0022 66        		.byte	102
+ 454 0023 64        		.byte	100
+ 455 0024 61        		.byte	97
+ 456 0025 60        		.byte	96
+ 457 0026 00        		.byte	0
+ 458 0027 00        		.byte	0
+ 561               	.Letext0:
+ 562               		.file 2 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/stdint.h"
+ 563               		.file 3 "pins/awesomedip.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 digitalIO.cpp
+     /tmp/ccF0BK9O.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccF0BK9O.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccF0BK9O.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccF0BK9O.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccF0BK9O.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccF0BK9O.s:11     .text:0000000000000000 _Z7getPORTi
+     /tmp/ccF0BK9O.s:418    .rodata:0000000000000000 _ZL4pins
+     /tmp/ccF0BK9O.s:407    .data:000000000000001c outs
+     /tmp/ccF0BK9O.s:58     .text:0000000000000030 _Z6getPINi
+     /tmp/ccF0BK9O.s:396    .data:000000000000000e ins
+     /tmp/ccF0BK9O.s:102    .text:0000000000000060 _Z6getDDRi
+     /tmp/ccF0BK9O.s:385    .data:0000000000000000 ddrs
+     /tmp/ccF0BK9O.s:146    .text:0000000000000090 _Z12digitalWritecc
+     /tmp/ccF0BK9O.s:236    .text:00000000000000fa _Z12setDirectioncc
+     /tmp/ccF0BK9O.s:326    .text:0000000000000164 _Z11digitalReadc
+
+UNDEFINED SYMBOLS
+__do_copy_data
