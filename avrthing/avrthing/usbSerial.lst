@@ -74,27 +74,22 @@
   17               	/* frame size = 0 */
   18               	/* stack size = 0 */
   19               	.L__stack_usage = 0
-  59:usbSerial.c   **** 	CDC_Device_ReceiveByte(&VirtualSerial_CDC_Interface);
-  20               		.loc 1 59 0
+  59:usbSerial.c   **** //	CDC_Device_ReceiveByte(&VirtualSerial_CDC_Interface);
+  60:usbSerial.c   ****         CDC_Device_USBTask(&VirtualSerial_CDC_Interface);
+  20               		.loc 1 60 0
   21 0000 80E0      		ldi r24,lo8(VirtualSerial_CDC_Interface)
   22 0002 90E0      		ldi r25,hi8(VirtualSerial_CDC_Interface)
-  23 0004 0E94 0000 		call CDC_Device_ReceiveByte
+  23 0004 0E94 0000 		call CDC_Device_USBTask
   24               	.LVL0:
-  60:usbSerial.c   ****         CDC_Device_USBTask(&VirtualSerial_CDC_Interface);
-  25               		.loc 1 60 0
-  26 0008 80E0      		ldi r24,lo8(VirtualSerial_CDC_Interface)
-  27 000a 90E0      		ldi r25,hi8(VirtualSerial_CDC_Interface)
-  28 000c 0E94 0000 		call CDC_Device_USBTask
-  29               	.LVL1:
   61:usbSerial.c   ****         USB_USBTask();	
-  30               		.loc 1 61 0
-  31 0010 0C94 0000 		jmp USB_USBTask
-  32               	.LVL2:
-  33               	.LFE100:
-  35               		.section	.text.SetupHardware,"ax",@progbits
-  36               	.global	SetupHardware
-  38               	SetupHardware:
-  39               	.LFB102:
+  25               		.loc 1 61 0
+  26 0008 0C94 0000 		jmp USB_USBTask
+  27               	.LVL1:
+  28               	.LFE100:
+  30               		.section	.text.SetupHardware,"ax",@progbits
+  31               	.global	SetupHardware
+  33               	SetupHardware:
+  34               	.LFB102:
   62:usbSerial.c   **** }
   63:usbSerial.c   **** 
   64:usbSerial.c   **** /** Main program entry point. This routine contains the overall program flow, including initial
@@ -105,7 +100,7 @@
   69:usbSerial.c   ****   	SetupHardware();
   70:usbSerial.c   **** 
   71:usbSerial.c   **** 	/* Create a regular character stream for the interface so that it can be used with the stdio.h fun
-  72:usbSerial.c   **** 	CDC_Device_CreateBlockingStream(&VirtualSerial_CDC_Interface, &USBSerialStream);
+  72:usbSerial.c   **** 	CDC_Device_CreateStream(&VirtualSerial_CDC_Interface, &USBSerialStream);
   73:usbSerial.c   **** 
   74:usbSerial.c   **** 	stdout = &USBSerialStream;
   75:usbSerial.c   **** 	stdin = &USBSerialStream;
@@ -114,15 +109,15 @@
   78:usbSerial.c   **** /** Configures the board hardware and chip peripherals for the demo's functionality. */
   79:usbSerial.c   **** void SetupHardware(void)
   80:usbSerial.c   **** {
-  40               		.loc 1 80 0
-  41               	/* prologue: function */
-  42               	/* frame size = 0 */
-  43               	/* stack size = 0 */
-  44               	.L__stack_usage = 0
-  45               	.LVL3:
-  46               	.LBB4:
-  47               	.LBB5:
-  48               		.file 2 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h"
+  35               		.loc 1 80 0
+  36               	/* prologue: function */
+  37               	/* frame size = 0 */
+  38               	/* stack size = 0 */
+  39               	.L__stack_usage = 0
+  40               	.LVL2:
+  41               	.LBB4:
+  42               	.LBB5:
+  43               		.file 2 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h"
    1:/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h **** /* Copyright (c) 2006, 2007, 2008  Eric B. Weddington
    2:/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h ****    All rights reserved.
    3:/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h **** 
@@ -1618,20 +1613,20 @@
 1493:/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h **** {
 1494:/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h ****     uint8_t __tmp = _BV(CLKPCE);
 1495:/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h ****     __asm__ __volatile__ (
-  49               		.loc 2 1495 0
-  50 0000 90E0      		ldi r25,0
-  51 0002 80E8      		ldi r24,lo8(-128)
-  52               	/* #APP */
-  53               	 ;  1495 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h" 1
-  54 0004 0FB6      		in __tmp_reg__,__SREG__
-  55 0006 F894      		cli
-  56 0008 8093 6100 		sts 97, r24
-  57 000c 9093 6100 		sts 97, r25
-  58 0010 0FBE      		out __SREG__, __tmp_reg__
-  59               	 ;  0 "" 2
-  60               	/* #NOAPP */
-  61               	.LBE5:
-  62               	.LBE4:
+  44               		.loc 2 1495 0
+  45 0000 90E0      		ldi r25,0
+  46 0002 80E8      		ldi r24,lo8(-128)
+  47               	/* #APP */
+  48               	 ;  1495 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/avr/power.h" 1
+  49 0004 0FB6      		in __tmp_reg__,__SREG__
+  50 0006 F894      		cli
+  51 0008 8093 6100 		sts 97, r24
+  52 000c 9093 6100 		sts 97, r25
+  53 0010 0FBE      		out __SREG__, __tmp_reg__
+  54               	 ;  0 "" 2
+  55               	/* #NOAPP */
+  56               	.LBE5:
+  57               	.LBE4:
   81:usbSerial.c   **** 	/* Disable watchdog if enabled by bootloader/fuses */
   82:usbSerial.c   **** //	MCUSR &= ~(1 << WDRF);
   83:usbSerial.c   **** //	wdt_disable();
@@ -1641,153 +1636,152 @@
   87:usbSerial.c   **** 
   88:usbSerial.c   **** 	/* Hardware Initialization */
   89:usbSerial.c   **** 	USB_Init();
-  63               		.loc 1 89 0
-  64 0012 0C94 0000 		jmp USB_Init
-  65               	.LVL4:
-  66               	.LFE102:
-  68               		.section	.text.initUSBSerial,"ax",@progbits
-  69               	.global	initUSBSerial
-  71               	initUSBSerial:
-  72               	.LFB101:
+  58               		.loc 1 89 0
+  59 0012 0C94 0000 		jmp USB_Init
+  60               	.LVL3:
+  61               	.LFE102:
+  63               		.section	.text.initUSBSerial,"ax",@progbits
+  64               	.global	initUSBSerial
+  66               	initUSBSerial:
+  67               	.LFB101:
   68:usbSerial.c   **** {
-  73               		.loc 1 68 0
-  74               	/* prologue: function */
-  75               	/* frame size = 0 */
-  76               	/* stack size = 0 */
-  77               	.L__stack_usage = 0
+  68               		.loc 1 68 0
+  69               	/* prologue: function */
+  70               	/* frame size = 0 */
+  71               	/* stack size = 0 */
+  72               	.L__stack_usage = 0
   69:usbSerial.c   ****   	SetupHardware();
-  78               		.loc 1 69 0
-  79 0000 0E94 0000 		call SetupHardware
-  80               	.LVL5:
-  72:usbSerial.c   **** 	CDC_Device_CreateBlockingStream(&VirtualSerial_CDC_Interface, &USBSerialStream);
-  81               		.loc 1 72 0
-  82 0004 60E0      		ldi r22,lo8(USBSerialStream)
-  83 0006 70E0      		ldi r23,hi8(USBSerialStream)
-  84 0008 80E0      		ldi r24,lo8(VirtualSerial_CDC_Interface)
-  85 000a 90E0      		ldi r25,hi8(VirtualSerial_CDC_Interface)
-  86 000c 0E94 0000 		call CDC_Device_CreateBlockingStream
-  87               	.LVL6:
+  73               		.loc 1 69 0
+  74 0000 0E94 0000 		call SetupHardware
+  75               	.LVL4:
+  72:usbSerial.c   **** 	CDC_Device_CreateStream(&VirtualSerial_CDC_Interface, &USBSerialStream);
+  76               		.loc 1 72 0
+  77 0004 60E0      		ldi r22,lo8(USBSerialStream)
+  78 0006 70E0      		ldi r23,hi8(USBSerialStream)
+  79 0008 80E0      		ldi r24,lo8(VirtualSerial_CDC_Interface)
+  80 000a 90E0      		ldi r25,hi8(VirtualSerial_CDC_Interface)
+  81 000c 0E94 0000 		call CDC_Device_CreateStream
+  82               	.LVL5:
   74:usbSerial.c   **** 	stdout = &USBSerialStream;
-  88               		.loc 1 74 0
-  89 0010 80E0      		ldi r24,lo8(USBSerialStream)
-  90 0012 90E0      		ldi r25,hi8(USBSerialStream)
-  91 0014 9093 0000 		sts __iob+2+1,r25
-  92 0018 8093 0000 		sts __iob+2,r24
+  83               		.loc 1 74 0
+  84 0010 80E0      		ldi r24,lo8(USBSerialStream)
+  85 0012 90E0      		ldi r25,hi8(USBSerialStream)
+  86 0014 9093 0000 		sts __iob+2+1,r25
+  87 0018 8093 0000 		sts __iob+2,r24
   75:usbSerial.c   **** 	stdin = &USBSerialStream;
-  93               		.loc 1 75 0
-  94 001c 9093 0000 		sts __iob+1,r25
-  95 0020 8093 0000 		sts __iob,r24
-  96 0024 0895      		ret
-  97               	.LFE101:
-  99               		.section	.text.EVENT_USB_Device_Disconnect,"ax",@progbits
- 100               	.global	EVENT_USB_Device_Disconnect
- 102               	EVENT_USB_Device_Disconnect:
- 103               	.LFB103:
+  88               		.loc 1 75 0
+  89 001c 9093 0000 		sts __iob+1,r25
+  90 0020 8093 0000 		sts __iob,r24
+  91 0024 0895      		ret
+  92               	.LFE101:
+  94               		.section	.text.EVENT_USB_Device_Disconnect,"ax",@progbits
+  95               	.global	EVENT_USB_Device_Disconnect
+  97               	EVENT_USB_Device_Disconnect:
+  98               	.LFB103:
   90:usbSerial.c   **** }
   91:usbSerial.c   **** 
   92:usbSerial.c   **** /** Checks for changes in the position of the board joystick, sending strings to the host upon each
   93:usbSerial.c   **** 
   94:usbSerial.c   **** void EVENT_USB_Device_Disconnect(void)
   95:usbSerial.c   **** {
- 104               		.loc 1 95 0
- 105               	/* prologue: function */
- 106               	/* frame size = 0 */
- 107               	/* stack size = 0 */
- 108               	.L__stack_usage = 0
- 109 0000 0895      		ret
- 110               	.LFE103:
- 112               		.section	.text.EVENT_USB_Device_ConfigurationChanged,"ax",@progbits
- 113               	.global	EVENT_USB_Device_ConfigurationChanged
- 115               	EVENT_USB_Device_ConfigurationChanged:
- 116               	.LFB104:
+  99               		.loc 1 95 0
+ 100               	/* prologue: function */
+ 101               	/* frame size = 0 */
+ 102               	/* stack size = 0 */
+ 103               	.L__stack_usage = 0
+ 104 0000 0895      		ret
+ 105               	.LFE103:
+ 107               		.section	.text.EVENT_USB_Device_ConfigurationChanged,"ax",@progbits
+ 108               	.global	EVENT_USB_Device_ConfigurationChanged
+ 110               	EVENT_USB_Device_ConfigurationChanged:
+ 111               	.LFB104:
   96:usbSerial.c   **** }
   97:usbSerial.c   **** 
   98:usbSerial.c   **** /** Event handler for the library USB Configuration Changed event. */
   99:usbSerial.c   **** void EVENT_USB_Device_ConfigurationChanged(void)
  100:usbSerial.c   **** {
- 117               		.loc 1 100 0
- 118               	/* prologue: function */
- 119               	/* frame size = 0 */
- 120               	/* stack size = 0 */
- 121               	.L__stack_usage = 0
- 122               	.LVL7:
+ 112               		.loc 1 100 0
+ 113               	/* prologue: function */
+ 114               	/* frame size = 0 */
+ 115               	/* stack size = 0 */
+ 116               	.L__stack_usage = 0
+ 117               	.LVL6:
  101:usbSerial.c   **** 	bool ConfigSuccess = true;
  102:usbSerial.c   **** 
  103:usbSerial.c   **** 	ConfigSuccess &= CDC_Device_ConfigureEndpoints(&VirtualSerial_CDC_Interface);
- 123               		.loc 1 103 0
- 124 0000 80E0      		ldi r24,lo8(VirtualSerial_CDC_Interface)
- 125 0002 90E0      		ldi r25,hi8(VirtualSerial_CDC_Interface)
- 126 0004 0C94 0000 		jmp CDC_Device_ConfigureEndpoints
- 127               	.LVL8:
- 128               	.LFE104:
- 130               		.section	.text.EVENT_USB_Device_ControlRequest,"ax",@progbits
- 131               	.global	EVENT_USB_Device_ControlRequest
- 133               	EVENT_USB_Device_ControlRequest:
- 134               	.LFB105:
+ 118               		.loc 1 103 0
+ 119 0000 80E0      		ldi r24,lo8(VirtualSerial_CDC_Interface)
+ 120 0002 90E0      		ldi r25,hi8(VirtualSerial_CDC_Interface)
+ 121 0004 0C94 0000 		jmp CDC_Device_ConfigureEndpoints
+ 122               	.LVL7:
+ 123               	.LFE104:
+ 125               		.section	.text.EVENT_USB_Device_ControlRequest,"ax",@progbits
+ 126               	.global	EVENT_USB_Device_ControlRequest
+ 128               	EVENT_USB_Device_ControlRequest:
+ 129               	.LFB105:
  104:usbSerial.c   **** }
  105:usbSerial.c   **** 
  106:usbSerial.c   **** /** Event handler for the library USB Control Request reception event. */
  107:usbSerial.c   **** void EVENT_USB_Device_ControlRequest(void)
  108:usbSerial.c   **** {
- 135               		.loc 1 108 0
- 136               	/* prologue: function */
- 137               	/* frame size = 0 */
- 138               	/* stack size = 0 */
- 139               	.L__stack_usage = 0
+ 130               		.loc 1 108 0
+ 131               	/* prologue: function */
+ 132               	/* frame size = 0 */
+ 133               	/* stack size = 0 */
+ 134               	.L__stack_usage = 0
  109:usbSerial.c   **** 	CDC_Device_ProcessControlRequest(&VirtualSerial_CDC_Interface);
- 140               		.loc 1 109 0
- 141 0000 80E0      		ldi r24,lo8(VirtualSerial_CDC_Interface)
- 142 0002 90E0      		ldi r25,hi8(VirtualSerial_CDC_Interface)
- 143 0004 0C94 0000 		jmp CDC_Device_ProcessControlRequest
- 144               	.LVL9:
- 145               	.LFE105:
- 147               	.global	VirtualSerial_CDC_Interface
- 148               		.data
- 151               	VirtualSerial_CDC_Interface:
- 152 0000 00        		.byte	0
- 153 0001 03        		.byte	3
- 154 0002 1000      		.word	16
- 155 0004 00        		.byte	0
- 156 0005 04        		.byte	4
- 157 0006 1000      		.word	16
- 158 0008 00        		.byte	0
- 159 0009 02        		.byte	2
- 160 000a 0800      		.word	8
- 161 000c 00        		.byte	0
- 162 000d 0000 0000 		.zero	11
- 162      0000 0000 
- 162      0000 00
- 163               		.local	USBSerialStream
- 164               		.comm	USBSerialStream,14,1
- 231               	.Letext0:
- 232               		.file 3 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/stdint.h"
- 233               		.file 4 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/stdio.h"
- 234               		.file 5 "../LUFA/Drivers/USB/Class/Device/../Common/CDCClassCommon.h"
- 235               		.file 6 "../LUFA/Drivers/USB/Class/Device/CDCClassDevice.h"
- 236               		.file 7 "../LUFA/Drivers/USB/Core/USBTask.h"
- 237               		.file 8 "../LUFA/Drivers/USB/Core/AVR8/USBController_AVR8.h"
+ 135               		.loc 1 109 0
+ 136 0000 80E0      		ldi r24,lo8(VirtualSerial_CDC_Interface)
+ 137 0002 90E0      		ldi r25,hi8(VirtualSerial_CDC_Interface)
+ 138 0004 0C94 0000 		jmp CDC_Device_ProcessControlRequest
+ 139               	.LVL8:
+ 140               	.LFE105:
+ 142               	.global	VirtualSerial_CDC_Interface
+ 143               		.data
+ 146               	VirtualSerial_CDC_Interface:
+ 147 0000 00        		.byte	0
+ 148 0001 03        		.byte	3
+ 149 0002 1000      		.word	16
+ 150 0004 00        		.byte	0
+ 151 0005 04        		.byte	4
+ 152 0006 1000      		.word	16
+ 153 0008 00        		.byte	0
+ 154 0009 02        		.byte	2
+ 155 000a 0800      		.word	8
+ 156 000c 00        		.byte	0
+ 157 000d 0000 0000 		.zero	11
+ 157      0000 0000 
+ 157      0000 00
+ 158               		.local	USBSerialStream
+ 159               		.comm	USBSerialStream,14,1
+ 226               	.Letext0:
+ 227               		.file 3 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/stdint.h"
+ 228               		.file 4 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/stdio.h"
+ 229               		.file 5 "../LUFA/Drivers/USB/Class/Device/../Common/CDCClassCommon.h"
+ 230               		.file 6 "../LUFA/Drivers/USB/Class/Device/CDCClassDevice.h"
+ 231               		.file 7 "../LUFA/Drivers/USB/Core/USBTask.h"
+ 232               		.file 8 "../LUFA/Drivers/USB/Core/AVR8/USBController_AVR8.h"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 usbSerial.c
-     /tmp/ccaqXSS5.s:2      *ABS*:000000000000003e __SP_H__
-     /tmp/ccaqXSS5.s:3      *ABS*:000000000000003d __SP_L__
-     /tmp/ccaqXSS5.s:4      *ABS*:000000000000003f __SREG__
-     /tmp/ccaqXSS5.s:5      *ABS*:0000000000000000 __tmp_reg__
-     /tmp/ccaqXSS5.s:6      *ABS*:0000000000000001 __zero_reg__
-     /tmp/ccaqXSS5.s:12     .text.runUSB:0000000000000000 runUSB
-     /tmp/ccaqXSS5.s:151    .data:0000000000000000 VirtualSerial_CDC_Interface
-     /tmp/ccaqXSS5.s:38     .text.SetupHardware:0000000000000000 SetupHardware
-     /tmp/ccaqXSS5.s:71     .text.initUSBSerial:0000000000000000 initUSBSerial
+     /tmp/ccdhdT3O.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccdhdT3O.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccdhdT3O.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccdhdT3O.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccdhdT3O.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccdhdT3O.s:12     .text.runUSB:0000000000000000 runUSB
+     /tmp/ccdhdT3O.s:146    .data:0000000000000000 VirtualSerial_CDC_Interface
+     /tmp/ccdhdT3O.s:33     .text.SetupHardware:0000000000000000 SetupHardware
+     /tmp/ccdhdT3O.s:66     .text.initUSBSerial:0000000000000000 initUSBSerial
                              .bss:0000000000000000 USBSerialStream
-     /tmp/ccaqXSS5.s:102    .text.EVENT_USB_Device_Disconnect:0000000000000000 EVENT_USB_Device_Disconnect
-     /tmp/ccaqXSS5.s:115    .text.EVENT_USB_Device_ConfigurationChanged:0000000000000000 EVENT_USB_Device_ConfigurationChanged
-     /tmp/ccaqXSS5.s:133    .text.EVENT_USB_Device_ControlRequest:0000000000000000 EVENT_USB_Device_ControlRequest
+     /tmp/ccdhdT3O.s:97     .text.EVENT_USB_Device_Disconnect:0000000000000000 EVENT_USB_Device_Disconnect
+     /tmp/ccdhdT3O.s:110    .text.EVENT_USB_Device_ConfigurationChanged:0000000000000000 EVENT_USB_Device_ConfigurationChanged
+     /tmp/ccdhdT3O.s:128    .text.EVENT_USB_Device_ControlRequest:0000000000000000 EVENT_USB_Device_ControlRequest
 
 UNDEFINED SYMBOLS
-CDC_Device_ReceiveByte
 CDC_Device_USBTask
 USB_USBTask
 USB_Init
-CDC_Device_CreateBlockingStream
+CDC_Device_CreateStream
 __iob
 CDC_Device_ConfigureEndpoints
 CDC_Device_ProcessControlRequest

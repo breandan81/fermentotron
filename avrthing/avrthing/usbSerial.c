@@ -56,7 +56,7 @@ static FILE USBSerialStream;
 //
 void runUSB(void)
 {
-	CDC_Device_ReceiveByte(&VirtualSerial_CDC_Interface);
+//	CDC_Device_ReceiveByte(&VirtualSerial_CDC_Interface);
         CDC_Device_USBTask(&VirtualSerial_CDC_Interface);
         USB_USBTask();	
 }
@@ -69,7 +69,7 @@ void initUSBSerial(void)
   	SetupHardware();
 
 	/* Create a regular character stream for the interface so that it can be used with the stdio.h functions */
-	CDC_Device_CreateBlockingStream(&VirtualSerial_CDC_Interface, &USBSerialStream);
+	CDC_Device_CreateStream(&VirtualSerial_CDC_Interface, &USBSerialStream);
 
 	stdout = &USBSerialStream;
 	stdin = &USBSerialStream;

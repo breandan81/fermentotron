@@ -27,477 +27,435 @@
   16               	/* frame size = 0 */
   17               	/* stack size = 0 */
   18               	.L__stack_usage = 0
+  19 0000 0895      		ret
+  20               	.LFE1:
+  22               	.global	_Z7initRTCv
+  24               	_Z7initRTCv:
+  25               	.LFB2:
   13:timer.cpp     **** 	#ifdef USBSERIAL_H
-  14:timer.cpp     **** 	runUSB();
-  19               		.loc 1 14 0
-  20 0000 0C94 0000 		jmp runUSB
-  21               	.LVL0:
-  22               	.LFE1:
-  24               	.global	_Z7initRTCv
-  26               	_Z7initRTCv:
-  27               	.LFB2:
+  14:timer.cpp     **** //	runUSB();
   15:timer.cpp     **** 	#endif
   16:timer.cpp     **** }
   17:timer.cpp     **** 
   18:timer.cpp     **** void initRTC(void)
   19:timer.cpp     **** {
-  28               		.loc 1 19 0
-  29               	/* prologue: function */
-  30               	/* frame size = 0 */
-  31               	/* stack size = 0 */
-  32               	.L__stack_usage = 0
+  26               		.loc 1 19 0
+  27               	/* prologue: function */
+  28               	/* frame size = 0 */
+  29               	/* stack size = 0 */
+  30               	.L__stack_usage = 0
   20:timer.cpp     **** 
   21:timer.cpp     **** 	TCCR1B |= _BV(WGM12); //set WGM12, will make OCR1A TOP for timer1	
-  33               		.loc 1 21 0
-  34 0004 E1E8      		ldi r30,lo8(-127)
-  35 0006 F0E0      		ldi r31,0
-  36 0008 8081      		ld r24,Z
-  37 000a 8860      		ori r24,lo8(8)
-  38 000c 8083      		st Z,r24
+  31               		.loc 1 21 0
+  32 0002 E1E8      		ldi r30,lo8(-127)
+  33 0004 F0E0      		ldi r31,0
+  34 0006 8081      		ld r24,Z
+  35 0008 8860      		ori r24,lo8(8)
+  36 000a 8083      		st Z,r24
   22:timer.cpp     **** 	OCR1A = MHZ*500;//half a ms 
-  39               		.loc 1 22 0
-  40 000e 80E4      		ldi r24,lo8(64)
-  41 0010 9FE1      		ldi r25,lo8(31)
-  42 0012 9093 8900 		sts 136+1,r25
-  43 0016 8093 8800 		sts 136,r24
+  37               		.loc 1 22 0
+  38 000c 80E4      		ldi r24,lo8(64)
+  39 000e 9FE1      		ldi r25,lo8(31)
+  40 0010 9093 8900 		sts 136+1,r25
+  41 0014 8093 8800 		sts 136,r24
   23:timer.cpp     **** 	
   24:timer.cpp     **** 	TCCR1B |= _BV(CS10); //clock source no prescaling
-  44               		.loc 1 24 0
-  45 001a 8081      		ld r24,Z
-  46 001c 8160      		ori r24,lo8(1)
-  47 001e 8083      		st Z,r24
+  42               		.loc 1 24 0
+  43 0018 8081      		ld r24,Z
+  44 001a 8160      		ori r24,lo8(1)
+  45 001c 8083      		st Z,r24
   25:timer.cpp     **** 	TIMSK1 |= _BV(OCIE1A);//output compare match interrupt enabled
-  48               		.loc 1 25 0
-  49 0020 EFE6      		ldi r30,lo8(111)
-  50 0022 F0E0      		ldi r31,0
-  51 0024 8081      		ld r24,Z
-  52 0026 8260      		ori r24,lo8(2)
-  53 0028 8083      		st Z,r24
+  46               		.loc 1 25 0
+  47 001e EFE6      		ldi r30,lo8(111)
+  48 0020 F0E0      		ldi r31,0
+  49 0022 8081      		ld r24,Z
+  50 0024 8260      		ori r24,lo8(2)
+  51 0026 8083      		st Z,r24
   26:timer.cpp     **** 	
   27:timer.cpp     **** 	sei();
-  54               		.loc 1 27 0
-  55               	/* #APP */
-  56               	 ;  27 "timer.cpp" 1
-  57 002a 7894      		sei
-  58               	 ;  0 "" 2
-  59               	/* #NOAPP */
-  60 002c 0895      		ret
-  61               	.LFE2:
-  63               	.global	__vector_17
-  65               	__vector_17:
-  66               	.LFB3:
+  52               		.loc 1 27 0
+  53               	/* #APP */
+  54               	 ;  27 "timer.cpp" 1
+  55 0028 7894      		sei
+  56               	 ;  0 "" 2
+  57               	/* #NOAPP */
+  58 002a 0895      		ret
+  59               	.LFE2:
+  61               	.global	__vector_17
+  63               	__vector_17:
+  64               	.LFB3:
   28:timer.cpp     **** }
   29:timer.cpp     **** 
   30:timer.cpp     **** ISR(TIMER1_COMPA_vect)
   31:timer.cpp     **** {
-  67               		.loc 1 31 0
-  68 002e 1F92      		push r1
-  69               	.LCFI0:
-  70 0030 0F92      		push r0
-  71               	.LCFI1:
-  72 0032 0FB6      		in r0,__SREG__
-  73 0034 0F92      		push r0
-  74 0036 1124      		clr __zero_reg__
-  75 0038 2F93      		push r18
-  76               	.LCFI2:
-  77 003a 3F93      		push r19
-  78               	.LCFI3:
-  79 003c 4F93      		push r20
-  80               	.LCFI4:
-  81 003e 5F93      		push r21
-  82               	.LCFI5:
-  83 0040 6F93      		push r22
-  84               	.LCFI6:
-  85 0042 7F93      		push r23
-  86               	.LCFI7:
-  87 0044 8F93      		push r24
-  88               	.LCFI8:
-  89 0046 9F93      		push r25
-  90               	.LCFI9:
-  91 0048 AF93      		push r26
-  92               	.LCFI10:
-  93 004a BF93      		push r27
-  94               	.LCFI11:
-  95 004c EF93      		push r30
-  96               	.LCFI12:
-  97 004e FF93      		push r31
-  98               	.LCFI13:
-  99               	/* prologue: Signal */
- 100               	/* frame size = 0 */
- 101               	/* stack size = 15 */
- 102               	.L__stack_usage = 15
- 103               	.LBB4:
- 104               	.LBB5:
-  14:timer.cpp     **** 	runUSB();
- 105               		.loc 1 14 0
- 106 0050 0E94 0000 		call runUSB
- 107               	.LVL1:
- 108               	.LBE5:
- 109               	.LBE4:
+  65               		.loc 1 31 0
+  66 002c 1F92      		push r1
+  67               	.LCFI0:
+  68 002e 0F92      		push r0
+  69               	.LCFI1:
+  70 0030 0FB6      		in r0,__SREG__
+  71 0032 0F92      		push r0
+  72 0034 1124      		clr __zero_reg__
+  73 0036 8F93      		push r24
+  74               	.LCFI2:
+  75 0038 9F93      		push r25
+  76               	.LCFI3:
+  77               	/* prologue: Signal */
+  78               	/* frame size = 0 */
+  79               	/* stack size = 5 */
+  80               	.L__stack_usage = 5
   32:timer.cpp     **** 	runTasks();	
   33:timer.cpp     **** 
   34:timer.cpp     **** 	halfMillis++;
- 110               		.loc 1 34 0
- 111 0054 8091 0000 		lds r24,halfMillis
- 112 0058 9091 0000 		lds r25,halfMillis+1
- 113 005c 0196      		adiw r24,1
- 114 005e 9093 0000 		sts halfMillis+1,r25
- 115 0062 8093 0000 		sts halfMillis,r24
+  81               		.loc 1 34 0
+  82 003a 8091 0000 		lds r24,halfMillis
+  83 003e 9091 0000 		lds r25,halfMillis+1
+  84 0042 0196      		adiw r24,1
+  85 0044 9093 0000 		sts halfMillis+1,r25
+  86 0048 8093 0000 		sts halfMillis,r24
   35:timer.cpp     **** 	if(!halfMillis)
- 116               		.loc 1 35 0
- 117 0066 8091 0000 		lds r24,halfMillis
- 118 006a 9091 0000 		lds r25,halfMillis+1
- 119 006e 892B      		or r24,r25
- 120 0070 01F4      		brne .L3
+  87               		.loc 1 35 0
+  88 004c 8091 0000 		lds r24,halfMillis
+  89 0050 9091 0000 		lds r25,halfMillis+1
+  90 0054 892B      		or r24,r25
+  91 0056 01F4      		brne .L3
   36:timer.cpp     **** 	{
   37:timer.cpp     **** 		overflows1++;
- 121               		.loc 1 37 0
- 122 0072 8091 0000 		lds r24,overflows1
- 123 0076 9091 0000 		lds r25,overflows1+1
- 124 007a 0196      		adiw r24,1
- 125 007c 9093 0000 		sts overflows1+1,r25
- 126 0080 8093 0000 		sts overflows1,r24
+  92               		.loc 1 37 0
+  93 0058 8091 0000 		lds r24,overflows1
+  94 005c 9091 0000 		lds r25,overflows1+1
+  95 0060 0196      		adiw r24,1
+  96 0062 9093 0000 		sts overflows1+1,r25
+  97 0066 8093 0000 		sts overflows1,r24
   38:timer.cpp     **** 		if(!overflows1)
- 127               		.loc 1 38 0
- 128 0084 8091 0000 		lds r24,overflows1
- 129 0088 9091 0000 		lds r25,overflows1+1
- 130 008c 892B      		or r24,r25
- 131 008e 01F4      		brne .L3
+  98               		.loc 1 38 0
+  99 006a 8091 0000 		lds r24,overflows1
+ 100 006e 9091 0000 		lds r25,overflows1+1
+ 101 0072 892B      		or r24,r25
+ 102 0074 01F4      		brne .L3
   39:timer.cpp     **** 		{
   40:timer.cpp     **** 			overflows2++;
- 132               		.loc 1 40 0
- 133 0090 8091 0000 		lds r24,overflows2
- 134 0094 9091 0000 		lds r25,overflows2+1
- 135 0098 0196      		adiw r24,1
- 136 009a 9093 0000 		sts overflows2+1,r25
- 137 009e 8093 0000 		sts overflows2,r24
- 138               	.L3:
- 139               	/* epilogue start */
+ 103               		.loc 1 40 0
+ 104 0076 8091 0000 		lds r24,overflows2
+ 105 007a 9091 0000 		lds r25,overflows2+1
+ 106 007e 0196      		adiw r24,1
+ 107 0080 9093 0000 		sts overflows2+1,r25
+ 108 0084 8093 0000 		sts overflows2,r24
+ 109               	.L3:
+ 110               	/* epilogue start */
   41:timer.cpp     **** 		}
   42:timer.cpp     **** 	} 
   43:timer.cpp     **** }
- 140               		.loc 1 43 0
- 141 00a2 FF91      		pop r31
- 142 00a4 EF91      		pop r30
- 143 00a6 BF91      		pop r27
- 144 00a8 AF91      		pop r26
- 145 00aa 9F91      		pop r25
- 146 00ac 8F91      		pop r24
- 147 00ae 7F91      		pop r23
- 148 00b0 6F91      		pop r22
- 149 00b2 5F91      		pop r21
- 150 00b4 4F91      		pop r20
- 151 00b6 3F91      		pop r19
- 152 00b8 2F91      		pop r18
- 153 00ba 0F90      		pop r0
- 154 00bc 0FBE      		out __SREG__,r0
- 155 00be 0F90      		pop r0
- 156 00c0 1F90      		pop r1
- 157 00c2 1895      		reti
- 158               	.LFE3:
- 160               	.global	_Z6millisv
- 162               	_Z6millisv:
- 163               	.LFB4:
+ 111               		.loc 1 43 0
+ 112 0088 9F91      		pop r25
+ 113 008a 8F91      		pop r24
+ 114 008c 0F90      		pop r0
+ 115 008e 0FBE      		out __SREG__,r0
+ 116 0090 0F90      		pop r0
+ 117 0092 1F90      		pop r1
+ 118 0094 1895      		reti
+ 119               	.LFE3:
+ 121               	.global	_Z6millisv
+ 123               	_Z6millisv:
+ 124               	.LFB4:
   44:timer.cpp     **** 
   45:timer.cpp     **** 
   46:timer.cpp     **** unsigned long millis()
   47:timer.cpp     **** {
- 164               		.loc 1 47 0
- 165 00c4 0F93      		push r16
- 166               	.LCFI14:
- 167 00c6 1F93      		push r17
- 168               	.LCFI15:
- 169 00c8 CF93      		push r28
- 170               	.LCFI16:
- 171 00ca DF93      		push r29
- 172               	.LCFI17:
- 173 00cc 00D0      		rcall .
- 174 00ce 00D0      		rcall .
- 175               	.LCFI18:
- 176 00d0 CDB7      		in r28,__SP_L__
- 177 00d2 DEB7      		in r29,__SP_H__
- 178               	.LCFI19:
- 179               	/* prologue: function */
- 180               	/* frame size = 4 */
- 181               	/* stack size = 8 */
- 182               	.L__stack_usage = 8
- 183               	.LBB6:
+ 125               		.loc 1 47 0
+ 126 0096 0F93      		push r16
+ 127               	.LCFI4:
+ 128 0098 1F93      		push r17
+ 129               	.LCFI5:
+ 130 009a CF93      		push r28
+ 131               	.LCFI6:
+ 132 009c DF93      		push r29
+ 133               	.LCFI7:
+ 134 009e 00D0      		rcall .
+ 135 00a0 00D0      		rcall .
+ 136               	.LCFI8:
+ 137 00a2 CDB7      		in r28,__SP_L__
+ 138 00a4 DEB7      		in r29,__SP_H__
+ 139               	.LCFI9:
+ 140               	/* prologue: function */
+ 141               	/* frame size = 4 */
+ 142               	/* stack size = 8 */
+ 143               	.L__stack_usage = 8
+ 144               	.LBB4:
   48:timer.cpp     **** 	volatile unsigned long returnVal = (halfMillis>> 1) + (((unsigned long)overflows1) <<15) + (((unsi
- 184               		.loc 1 48 0
- 185 00d4 2091 0000 		lds r18,halfMillis
- 186 00d8 3091 0000 		lds r19,halfMillis+1
- 187 00dc 8091 0000 		lds r24,overflows1
- 188 00e0 9091 0000 		lds r25,overflows1+1
- 189 00e4 4091 0000 		lds r20,overflows2
- 190 00e8 5091 0000 		lds r21,overflows2+1
- 191 00ec A0E0      		ldi r26,0
- 192 00ee B0E0      		ldi r27,0
- 193               	.LVL2:
- 194 00f0 6FE0      		ldi r22,15
- 195               		1:
- 196 00f2 880F      		lsl r24
- 197 00f4 991F      		rol r25
- 198 00f6 AA1F      		rol r26
- 199 00f8 BB1F      		rol r27
- 200 00fa 6A95      		dec r22
- 201 00fc 01F4      		brne 1b
- 202               	.LVL3:
- 203 00fe 3695      		lsr r19
- 204 0100 2795      		ror r18
- 205 0102 820F      		add r24,r18
- 206 0104 931F      		adc r25,r19
- 207 0106 A11D      		adc r26,__zero_reg__
- 208 0108 B11D      		adc r27,__zero_reg__
- 209               	.LVL4:
- 210 010a 60E0      		ldi r22,0
- 211 010c 70E0      		ldi r23,0
- 212 010e 7727      		clr r23
- 213 0110 4695      		lsr r20
- 214 0112 7795      		ror r23
- 215 0114 6627      		clr r22
- 216 0116 5527      		clr r21
- 217 0118 4427      		clr r20
- 218 011a 840F      		add r24,r20
- 219 011c 951F      		adc r25,r21
- 220 011e A61F      		adc r26,r22
- 221 0120 B71F      		adc r27,r23
- 222               	.LVL5:
- 223 0122 8983      		std Y+1,r24
- 224 0124 9A83      		std Y+2,r25
- 225 0126 AB83      		std Y+3,r26
- 226 0128 BC83      		std Y+4,r27
- 227               	.LVL6:
+ 145               		.loc 1 48 0
+ 146 00a6 2091 0000 		lds r18,halfMillis
+ 147 00aa 3091 0000 		lds r19,halfMillis+1
+ 148 00ae 8091 0000 		lds r24,overflows1
+ 149 00b2 9091 0000 		lds r25,overflows1+1
+ 150 00b6 4091 0000 		lds r20,overflows2
+ 151 00ba 5091 0000 		lds r21,overflows2+1
+ 152 00be A0E0      		ldi r26,0
+ 153 00c0 B0E0      		ldi r27,0
+ 154               	.LVL0:
+ 155 00c2 6FE0      		ldi r22,15
+ 156               		1:
+ 157 00c4 880F      		lsl r24
+ 158 00c6 991F      		rol r25
+ 159 00c8 AA1F      		rol r26
+ 160 00ca BB1F      		rol r27
+ 161 00cc 6A95      		dec r22
+ 162 00ce 01F4      		brne 1b
+ 163               	.LVL1:
+ 164 00d0 3695      		lsr r19
+ 165 00d2 2795      		ror r18
+ 166 00d4 820F      		add r24,r18
+ 167 00d6 931F      		adc r25,r19
+ 168 00d8 A11D      		adc r26,__zero_reg__
+ 169 00da B11D      		adc r27,__zero_reg__
+ 170               	.LVL2:
+ 171 00dc 60E0      		ldi r22,0
+ 172 00de 70E0      		ldi r23,0
+ 173 00e0 7727      		clr r23
+ 174 00e2 4695      		lsr r20
+ 175 00e4 7795      		ror r23
+ 176 00e6 6627      		clr r22
+ 177 00e8 5527      		clr r21
+ 178 00ea 4427      		clr r20
+ 179 00ec 840F      		add r24,r20
+ 180 00ee 951F      		adc r25,r21
+ 181 00f0 A61F      		adc r26,r22
+ 182 00f2 B71F      		adc r27,r23
+ 183               	.LVL3:
+ 184 00f4 8983      		std Y+1,r24
+ 185 00f6 9A83      		std Y+2,r25
+ 186 00f8 AB83      		std Y+3,r26
+ 187 00fa BC83      		std Y+4,r27
+ 188               	.LVL4:
   49:timer.cpp     **** 
   50:timer.cpp     **** 	return returnVal;
- 228               		.loc 1 50 0
- 229 012a 0981      		ldd r16,Y+1
- 230 012c 1A81      		ldd r17,Y+2
- 231 012e 2B81      		ldd r18,Y+3
- 232 0130 3C81      		ldd r19,Y+4
- 233               	.LBE6:
+ 189               		.loc 1 50 0
+ 190 00fc 0981      		ldd r16,Y+1
+ 191 00fe 1A81      		ldd r17,Y+2
+ 192 0100 2B81      		ldd r18,Y+3
+ 193 0102 3C81      		ldd r19,Y+4
+ 194               	.LBE4:
   51:timer.cpp     **** }
- 234               		.loc 1 51 0
- 235 0132 B801      		movw r22,r16
- 236 0134 C901      		movw r24,r18
- 237               	.LVL7:
- 238               	/* epilogue start */
- 239 0136 0F90      		pop __tmp_reg__
- 240 0138 0F90      		pop __tmp_reg__
- 241 013a 0F90      		pop __tmp_reg__
- 242 013c 0F90      		pop __tmp_reg__
- 243 013e DF91      		pop r29
- 244 0140 CF91      		pop r28
- 245 0142 1F91      		pop r17
- 246 0144 0F91      		pop r16
- 247 0146 0895      		ret
- 248               	.LFE4:
- 250               	.global	_Z7secondsv
- 252               	_Z7secondsv:
- 253               	.LFB5:
+ 195               		.loc 1 51 0
+ 196 0104 B801      		movw r22,r16
+ 197 0106 C901      		movw r24,r18
+ 198               	.LVL5:
+ 199               	/* epilogue start */
+ 200 0108 0F90      		pop __tmp_reg__
+ 201 010a 0F90      		pop __tmp_reg__
+ 202 010c 0F90      		pop __tmp_reg__
+ 203 010e 0F90      		pop __tmp_reg__
+ 204 0110 DF91      		pop r29
+ 205 0112 CF91      		pop r28
+ 206 0114 1F91      		pop r17
+ 207 0116 0F91      		pop r16
+ 208 0118 0895      		ret
+ 209               	.LFE4:
+ 211               	.global	_Z7secondsv
+ 213               	_Z7secondsv:
+ 214               	.LFB5:
   52:timer.cpp     **** 
   53:timer.cpp     **** unsigned long seconds()
   54:timer.cpp     **** {
- 254               		.loc 1 54 0
- 255 0148 CF92      		push r12
- 256               	.LCFI20:
- 257 014a DF92      		push r13
- 258               	.LCFI21:
- 259 014c EF92      		push r14
- 260               	.LCFI22:
- 261 014e FF92      		push r15
- 262               	.LCFI23:
- 263               	/* prologue: function */
- 264               	/* frame size = 0 */
- 265               	/* stack size = 4 */
- 266               	.L__stack_usage = 4
- 267               	.LBB7:
+ 215               		.loc 1 54 0
+ 216 011a CF92      		push r12
+ 217               	.LCFI10:
+ 218 011c DF92      		push r13
+ 219               	.LCFI11:
+ 220 011e EF92      		push r14
+ 221               	.LCFI12:
+ 222 0120 FF92      		push r15
+ 223               	.LCFI13:
+ 224               	/* prologue: function */
+ 225               	/* frame size = 0 */
+ 226               	/* stack size = 4 */
+ 227               	.L__stack_usage = 4
+ 228               	.LBB5:
   55:timer.cpp     **** 	long seconds = overflows1;
- 268               		.loc 1 55 0
- 269 0150 6091 0000 		lds r22,overflows1
- 270 0154 7091 0000 		lds r23,overflows1+1
- 271               	.LVL8:
+ 229               		.loc 1 55 0
+ 230 0122 6091 0000 		lds r22,overflows1
+ 231 0126 7091 0000 		lds r23,overflows1+1
+ 232               	.LVL6:
   56:timer.cpp     **** 	seconds = ((seconds << 16) + halfMillis)/2000;
- 272               		.loc 1 56 0
- 273 0158 2091 0000 		lds r18,halfMillis
- 274 015c 3091 0000 		lds r19,halfMillis+1
+ 233               		.loc 1 56 0
+ 234 012a 2091 0000 		lds r18,halfMillis
+ 235 012e 3091 0000 		lds r19,halfMillis+1
   55:timer.cpp     **** 	long seconds = overflows1;
- 275               		.loc 1 55 0
- 276 0160 CB01      		movw r24,r22
- 277 0162 A0E0      		ldi r26,0
- 278 0164 B0E0      		ldi r27,0
- 279               		.loc 1 56 0
- 280 0166 7727      		clr r23
- 281 0168 6627      		clr r22
- 282               	.LVL9:
- 283 016a 620F      		add r22,r18
- 284 016c 731F      		adc r23,r19
- 285 016e 811D      		adc r24,__zero_reg__
- 286 0170 911D      		adc r25,__zero_reg__
- 287 0172 20ED      		ldi r18,lo8(-48)
- 288 0174 37E0      		ldi r19,lo8(7)
- 289 0176 40E0      		ldi r20,0
- 290 0178 50E0      		ldi r21,0
- 291 017a 0E94 0000 		call __divmodsi4
- 292 017e 6901      		movw r12,r18
- 293 0180 7A01      		movw r14,r20
- 294               	.LVL10:
+ 236               		.loc 1 55 0
+ 237 0132 CB01      		movw r24,r22
+ 238 0134 A0E0      		ldi r26,0
+ 239 0136 B0E0      		ldi r27,0
+ 240               		.loc 1 56 0
+ 241 0138 7727      		clr r23
+ 242 013a 6627      		clr r22
+ 243               	.LVL7:
+ 244 013c 620F      		add r22,r18
+ 245 013e 731F      		adc r23,r19
+ 246 0140 811D      		adc r24,__zero_reg__
+ 247 0142 911D      		adc r25,__zero_reg__
+ 248 0144 20ED      		ldi r18,lo8(-48)
+ 249 0146 37E0      		ldi r19,lo8(7)
+ 250 0148 40E0      		ldi r20,0
+ 251 014a 50E0      		ldi r21,0
+ 252 014c 0E94 0000 		call __divmodsi4
+ 253 0150 6901      		movw r12,r18
+ 254 0152 7A01      		movw r14,r20
+ 255               	.LVL8:
   57:timer.cpp     **** 	long temp = overflows2;
- 295               		.loc 1 57 0
- 296 0182 6091 0000 		lds r22,overflows2
- 297 0186 7091 0000 		lds r23,overflows2+1
- 298 018a CB01      		movw r24,r22
- 299 018c A0E0      		ldi r26,0
- 300 018e B0E0      		ldi r27,0
- 301               	.LVL11:
+ 256               		.loc 1 57 0
+ 257 0154 6091 0000 		lds r22,overflows2
+ 258 0158 7091 0000 		lds r23,overflows2+1
+ 259 015c CB01      		movw r24,r22
+ 260 015e A0E0      		ldi r26,0
+ 261 0160 B0E0      		ldi r27,0
+ 262               	.LVL9:
   58:timer.cpp     **** 	temp = temp << 16;
- 302               		.loc 1 58 0
- 303 0190 7727      		clr r23
- 304 0192 6627      		clr r22
- 305               	.LVL12:
+ 263               		.loc 1 58 0
+ 264 0162 7727      		clr r23
+ 265 0164 6627      		clr r22
+ 266               	.LVL10:
   59:timer.cpp     **** 	temp /= 1000;
- 306               		.loc 1 59 0
- 307 0194 28EE      		ldi r18,lo8(-24)
- 308 0196 33E0      		ldi r19,lo8(3)
- 309 0198 40E0      		ldi r20,0
- 310 019a 50E0      		ldi r21,0
- 311 019c 0E94 0000 		call __divmodsi4
- 312               	.LVL13:
+ 267               		.loc 1 59 0
+ 268 0166 28EE      		ldi r18,lo8(-24)
+ 269 0168 33E0      		ldi r19,lo8(3)
+ 270 016a 40E0      		ldi r20,0
+ 271 016c 50E0      		ldi r21,0
+ 272 016e 0E94 0000 		call __divmodsi4
+ 273               	.LVL11:
   60:timer.cpp     **** 	temp = temp<<16;
- 313               		.loc 1 60 0
- 314 01a0 D901      		movw r26,r18
- 315 01a2 9927      		clr r25
- 316 01a4 8827      		clr r24
- 317               	.LVL14:
+ 274               		.loc 1 60 0
+ 275 0172 D901      		movw r26,r18
+ 276 0174 9927      		clr r25
+ 277 0176 8827      		clr r24
+ 278               	.LVL12:
   61:timer.cpp     **** 	seconds += temp;
- 318               		.loc 1 61 0
- 319 01a6 C80E      		add r12,r24
- 320 01a8 D91E      		adc r13,r25
- 321 01aa EA1E      		adc r14,r26
- 322 01ac FB1E      		adc r15,r27
- 323               	.LVL15:
- 324               	.LBE7:
+ 279               		.loc 1 61 0
+ 280 0178 C80E      		add r12,r24
+ 281 017a D91E      		adc r13,r25
+ 282 017c EA1E      		adc r14,r26
+ 283 017e FB1E      		adc r15,r27
+ 284               	.LVL13:
+ 285               	.LBE5:
   62:timer.cpp     **** 	return seconds;
   63:timer.cpp     **** }
- 325               		.loc 1 63 0
- 326 01ae B601      		movw r22,r12
- 327 01b0 C701      		movw r24,r14
- 328               	.LVL16:
- 329               	/* epilogue start */
- 330 01b2 FF90      		pop r15
- 331 01b4 EF90      		pop r14
- 332 01b6 DF90      		pop r13
- 333 01b8 CF90      		pop r12
- 334               	.LVL17:
- 335 01ba 0895      		ret
- 336               	.LFE5:
- 338               	.global	_Z11delayMillisj
- 340               	_Z11delayMillisj:
- 341               	.LFB6:
+ 286               		.loc 1 63 0
+ 287 0180 B601      		movw r22,r12
+ 288 0182 C701      		movw r24,r14
+ 289               	.LVL14:
+ 290               	/* epilogue start */
+ 291 0184 FF90      		pop r15
+ 292 0186 EF90      		pop r14
+ 293 0188 DF90      		pop r13
+ 294 018a CF90      		pop r12
+ 295               	.LVL15:
+ 296 018c 0895      		ret
+ 297               	.LFE5:
+ 299               	.global	_Z11delayMillisj
+ 301               	_Z11delayMillisj:
+ 302               	.LFB6:
   64:timer.cpp     **** void delayMillis(unsigned int interval)
   65:timer.cpp     **** {
- 342               		.loc 1 65 0
- 343               	.LVL18:
- 344 01bc 8F92      		push r8
- 345               	.LCFI24:
- 346 01be 9F92      		push r9
- 347               	.LCFI25:
- 348 01c0 AF92      		push r10
- 349               	.LCFI26:
- 350 01c2 BF92      		push r11
- 351               	.LCFI27:
- 352 01c4 CF92      		push r12
- 353               	.LCFI28:
- 354 01c6 DF92      		push r13
- 355               	.LCFI29:
- 356 01c8 EF92      		push r14
- 357               	.LCFI30:
- 358 01ca FF92      		push r15
- 359               	.LCFI31:
- 360               	/* prologue: function */
- 361               	/* frame size = 0 */
- 362               	/* stack size = 8 */
- 363               	.L__stack_usage = 8
- 364 01cc 6C01      		movw r12,r24
- 365               	.LBB8:
+ 303               		.loc 1 65 0
+ 304               	.LVL16:
+ 305 018e 8F92      		push r8
+ 306               	.LCFI14:
+ 307 0190 9F92      		push r9
+ 308               	.LCFI15:
+ 309 0192 AF92      		push r10
+ 310               	.LCFI16:
+ 311 0194 BF92      		push r11
+ 312               	.LCFI17:
+ 313 0196 CF92      		push r12
+ 314               	.LCFI18:
+ 315 0198 DF92      		push r13
+ 316               	.LCFI19:
+ 317 019a EF92      		push r14
+ 318               	.LCFI20:
+ 319 019c FF92      		push r15
+ 320               	.LCFI21:
+ 321               	/* prologue: function */
+ 322               	/* frame size = 0 */
+ 323               	/* stack size = 8 */
+ 324               	.L__stack_usage = 8
+ 325 019e 6C01      		movw r12,r24
+ 326               	.LBB6:
   66:timer.cpp     **** 	
   67:timer.cpp     **** 	unsigned long start = millis();
- 366               		.loc 1 67 0
- 367 01ce 0E94 0000 		call _Z6millisv
- 368               	.LVL19:
- 369 01d2 4B01      		movw r8,r22
- 370 01d4 5C01      		movw r10,r24
- 371               	.LVL20:
+ 327               		.loc 1 67 0
+ 328 01a0 0E94 0000 		call _Z6millisv
+ 329               	.LVL17:
+ 330 01a4 4B01      		movw r8,r22
+ 331 01a6 5C01      		movw r10,r24
+ 332               	.LVL18:
   68:timer.cpp     **** //	volatile unsigned long current = millis();
   69:timer.cpp     **** //	printf("running delay millis for %d, %d\r\n", interval, start);
   70:timer.cpp     **** 	
   71:timer.cpp     **** 	while(millis()-start < interval)
- 372               		.loc 1 71 0
- 373 01d6 E12C      		mov r14,__zero_reg__
- 374 01d8 F12C      		mov r15,__zero_reg__
- 375               	.L10:
- 376               		.loc 1 71 0 is_stmt 0 discriminator 1
- 377 01da 0E94 0000 		call _Z6millisv
- 378               	.LVL21:
- 379 01de 6819      		sub r22,r8
- 380 01e0 7909      		sbc r23,r9
- 381 01e2 8A09      		sbc r24,r10
- 382 01e4 9B09      		sbc r25,r11
- 383 01e6 6C15      		cp r22,r12
- 384 01e8 7D05      		cpc r23,r13
- 385 01ea 8E05      		cpc r24,r14
- 386 01ec 9F05      		cpc r25,r15
- 387 01ee 00F0      		brlo .L10
- 388               	/* epilogue start */
- 389               	.LBE8:
+ 333               		.loc 1 71 0
+ 334 01a8 E12C      		mov r14,__zero_reg__
+ 335 01aa F12C      		mov r15,__zero_reg__
+ 336               	.L10:
+ 337               		.loc 1 71 0 is_stmt 0 discriminator 1
+ 338 01ac 0E94 0000 		call _Z6millisv
+ 339               	.LVL19:
+ 340 01b0 6819      		sub r22,r8
+ 341 01b2 7909      		sbc r23,r9
+ 342 01b4 8A09      		sbc r24,r10
+ 343 01b6 9B09      		sbc r25,r11
+ 344 01b8 6C15      		cp r22,r12
+ 345 01ba 7D05      		cpc r23,r13
+ 346 01bc 8E05      		cpc r24,r14
+ 347 01be 9F05      		cpc r25,r15
+ 348 01c0 00F0      		brlo .L10
+ 349               	/* epilogue start */
+ 350               	.LBE6:
   72:timer.cpp     **** 	{
   73:timer.cpp     **** //		current=millis();
   74:timer.cpp     **** 	}
   75:timer.cpp     **** }
- 390               		.loc 1 75 0 is_stmt 1
- 391 01f0 FF90      		pop r15
- 392 01f2 EF90      		pop r14
- 393 01f4 DF90      		pop r13
- 394 01f6 CF90      		pop r12
- 395               	.LVL22:
- 396 01f8 BF90      		pop r11
- 397 01fa AF90      		pop r10
- 398 01fc 9F90      		pop r9
- 399 01fe 8F90      		pop r8
- 400               	.LVL23:
- 401 0200 0895      		ret
- 402               	.LFE6:
- 404               	.global	overflows2
- 405               		.section .bss
- 408               	overflows2:
- 409 0000 0000      		.zero	2
- 410               	.global	overflows1
- 413               	overflows1:
- 414 0002 0000      		.zero	2
- 415               	.global	halfMillis
- 416               		.data
- 419               	halfMillis:
- 420 0000 0100      		.word	1
- 675               	.Letext0:
- 676               		.file 2 "usbSerial.h"
+ 351               		.loc 1 75 0 is_stmt 1
+ 352 01c2 FF90      		pop r15
+ 353 01c4 EF90      		pop r14
+ 354 01c6 DF90      		pop r13
+ 355 01c8 CF90      		pop r12
+ 356               	.LVL20:
+ 357 01ca BF90      		pop r11
+ 358 01cc AF90      		pop r10
+ 359 01ce 9F90      		pop r9
+ 360 01d0 8F90      		pop r8
+ 361               	.LVL21:
+ 362 01d2 0895      		ret
+ 363               	.LFE6:
+ 365               	.global	overflows2
+ 366               		.section .bss
+ 369               	overflows2:
+ 370 0000 0000      		.zero	2
+ 371               	.global	overflows1
+ 374               	overflows1:
+ 375 0002 0000      		.zero	2
+ 376               	.global	halfMillis
+ 377               		.data
+ 380               	halfMillis:
+ 381 0000 0100      		.word	1
+ 576               	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 timer.cpp
-     /tmp/ccNcd8aQ.s:2      *ABS*:000000000000003e __SP_H__
-     /tmp/ccNcd8aQ.s:3      *ABS*:000000000000003d __SP_L__
-     /tmp/ccNcd8aQ.s:4      *ABS*:000000000000003f __SREG__
-     /tmp/ccNcd8aQ.s:5      *ABS*:0000000000000000 __tmp_reg__
-     /tmp/ccNcd8aQ.s:6      *ABS*:0000000000000001 __zero_reg__
-     /tmp/ccNcd8aQ.s:11     .text:0000000000000000 _Z8runTasksv
-     /tmp/ccNcd8aQ.s:26     .text:0000000000000004 _Z7initRTCv
-     /tmp/ccNcd8aQ.s:65     .text:000000000000002e __vector_17
-     /tmp/ccNcd8aQ.s:419    .data:0000000000000000 halfMillis
-     /tmp/ccNcd8aQ.s:413    .bss:0000000000000002 overflows1
-     /tmp/ccNcd8aQ.s:408    .bss:0000000000000000 overflows2
-     /tmp/ccNcd8aQ.s:162    .text:00000000000000c4 _Z6millisv
-     /tmp/ccNcd8aQ.s:252    .text:0000000000000148 _Z7secondsv
-     /tmp/ccNcd8aQ.s:340    .text:00000000000001bc _Z11delayMillisj
+     /tmp/ccxnJBrI.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccxnJBrI.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccxnJBrI.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccxnJBrI.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccxnJBrI.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccxnJBrI.s:11     .text:0000000000000000 _Z8runTasksv
+     /tmp/ccxnJBrI.s:24     .text:0000000000000002 _Z7initRTCv
+     /tmp/ccxnJBrI.s:63     .text:000000000000002c __vector_17
+     /tmp/ccxnJBrI.s:380    .data:0000000000000000 halfMillis
+     /tmp/ccxnJBrI.s:374    .bss:0000000000000002 overflows1
+     /tmp/ccxnJBrI.s:369    .bss:0000000000000000 overflows2
+     /tmp/ccxnJBrI.s:123    .text:0000000000000096 _Z6millisv
+     /tmp/ccxnJBrI.s:213    .text:000000000000011a _Z7secondsv
+     /tmp/ccxnJBrI.s:301    .text:000000000000018e _Z11delayMillisj
 
 UNDEFINED SYMBOLS
-runUSB
 __divmodsi4
 __do_copy_data
 __do_clear_bss

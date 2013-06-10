@@ -4,6 +4,13 @@
 #include "digitalIO.h"
 #include <avr/pgmspace.h>
 #include "pins/awesomedip.h"
+#include "fermostat.h"
+
+char buf[10];
+
+void loop(void);
+void delaySec(unsigned int t);
+
 int main(void)
 {
 	
@@ -15,16 +22,28 @@ int main(void)
 	analogSetup();	
 	setRefVCC();
 	pin = setPin(37);
+ 	setDirection(8, 1);	
 
 	while(true)
 	{
-		short temp = convert();
-		printf("pin %d = %d or %d deg C read %d times ADCSRB = %x ADMUX = %x 1<<6 = %x \n\r", pin, temp, (short)((((long)temp*500l)/1024l)-273), i, ADCSRB, ADMUX, 1<<6);
-		setDirection(8, 1);
-		digitalWrite(8,1);
-		delayMillis(100);
-		i++;
+		runUSB();
+		loop();
 	}	
 
 	return 0;
+}
+
+void loop(void)
+{
+	fermostat();
+//	printf("looped\n\r");
+
+}
+void delaySec(unsigned int t)
+{
+	unsigned long start = seconds();
+	while(seconds()-start < t)
+	{
+		runUSB();
+	}
 }
