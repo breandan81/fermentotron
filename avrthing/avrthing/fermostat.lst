@@ -1,0 +1,611 @@
+   1               		.file	"fermostat.cpp"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               	.global	_Z9switchOffv
+  11               	_Z9switchOffv:
+  12               	.LFB3:
+  13               		.file 1 "fermostat.cpp"
+   1:fermostat.cpp **** #include "avrthing.h"
+   2:fermostat.cpp **** #include "fermostat.h"
+   3:fermostat.cpp **** #include <stdlib.h>
+   4:fermostat.cpp **** #include <stdio.h>
+   5:fermostat.cpp **** 
+   6:fermostat.cpp **** /*---
+   7:fermostat.cpp **** Command set:
+   8:fermostat.cpp **** 
+   9:fermostat.cpp **** sxx set temp to xx
+  10:fermostat.cpp **** get get temp
+  11:fermostat.cpp **** o11 turn on
+  12:fermostat.cpp **** o10 turn off
+  13:fermostat.cpp **** 
+  14:fermostat.cpp **** ------*/
+  15:fermostat.cpp **** //constants
+  16:fermostat.cpp **** #define maxTemp 55
+  17:fermostat.cpp **** #define minTemp -1
+  18:fermostat.cpp **** #define sensorPin 37
+  19:fermostat.cpp **** #define relayPin 8
+  20:fermostat.cpp **** #define minOff 300 //minimum time off in seconds
+  21:fermostat.cpp **** #define hyst 1 //will try to hold +- 1 C
+  22:fermostat.cpp **** #define VREF 495
+  23:fermostat.cpp **** 
+  24:fermostat.cpp **** //prototypes
+  25:fermostat.cpp **** void doCmd(void);
+  26:fermostat.cpp **** short getTemp(short pin);
+  27:fermostat.cpp **** void checkTemp();
+  28:fermostat.cpp **** void switchOn();
+  29:fermostat.cpp **** void switchOff();
+  30:fermostat.cpp **** //end prototypes
+  31:fermostat.cpp **** 
+  32:fermostat.cpp **** 
+  33:fermostat.cpp **** //globals
+  34:fermostat.cpp **** char cmd[3];
+  35:fermostat.cpp **** int index = -1;
+  36:fermostat.cpp **** int setTemp = 20;
+  37:fermostat.cpp **** unsigned long timeOff = 0;
+  38:fermostat.cpp **** //end globals
+  39:fermostat.cpp **** 
+  40:fermostat.cpp **** void checkTemp()
+  41:fermostat.cpp **** {
+  42:fermostat.cpp **** 	if(getTemp(sensorPin) > setTemp + hyst)
+  43:fermostat.cpp **** 	{
+  44:fermostat.cpp **** 		switchOn();
+  45:fermostat.cpp **** 	}
+  46:fermostat.cpp **** 	else
+  47:fermostat.cpp **** 		switchOff();
+  48:fermostat.cpp **** }
+  49:fermostat.cpp **** void switchOn()
+  50:fermostat.cpp **** {
+  51:fermostat.cpp **** 	if(timeOff + minOff < seconds())
+  52:fermostat.cpp **** 	{
+  53:fermostat.cpp **** 		return;
+  54:fermostat.cpp **** 	}
+  55:fermostat.cpp **** 	if(getTemp(sensorPin)>maxTemp)
+  56:fermostat.cpp **** 	{
+  57:fermostat.cpp **** 		return;
+  58:fermostat.cpp **** 	}
+  59:fermostat.cpp **** 	
+  60:fermostat.cpp **** 	digitalWrite(relayPin, HIGH);
+  61:fermostat.cpp **** 	timeOff = -1;
+  62:fermostat.cpp **** }
+  63:fermostat.cpp **** void switchOff()
+  64:fermostat.cpp **** {
+  14               		.loc 1 64 0
+  15               	/* prologue: function */
+  16               	/* frame size = 0 */
+  17               	/* stack size = 0 */
+  18               	.L__stack_usage = 0
+  65:fermostat.cpp **** 	if(timeOff == -1) //then we're on, otherwise don't do anything
+  19               		.loc 1 65 0
+  20 0000 8091 0000 		lds r24,timeOff
+  21 0004 9091 0000 		lds r25,timeOff+1
+  22 0008 A091 0000 		lds r26,timeOff+2
+  23 000c B091 0000 		lds r27,timeOff+3
+  24 0010 8F3F      		cpi r24,-1
+  25 0012 9F4F      		sbci r25,-1
+  26 0014 AF4F      		sbci r26,-1
+  27 0016 BF4F      		sbci r27,-1
+  28 0018 01F4      		brne .L1
+  66:fermostat.cpp **** 	{
+  67:fermostat.cpp **** 		digitalWrite(relayPin, LOW);
+  29               		.loc 1 67 0
+  30 001a 60E0      		ldi r22,0
+  31 001c 88E0      		ldi r24,lo8(8)
+  32 001e 0E94 0000 		call _Z12digitalWritecc
+  33               	.LVL0:
+  68:fermostat.cpp **** 		timeOff = seconds();
+  34               		.loc 1 68 0
+  35 0022 0E94 0000 		call _Z7secondsv
+  36               	.LVL1:
+  37 0026 6093 0000 		sts timeOff,r22
+  38 002a 7093 0000 		sts timeOff+1,r23
+  39 002e 8093 0000 		sts timeOff+2,r24
+  40 0032 9093 0000 		sts timeOff+3,r25
+  41               	.L1:
+  42 0036 0895      		ret
+  43               	.LFE3:
+  45               	.global	_Z7getTemps
+  47               	_Z7getTemps:
+  48               	.LFB4:
+  69:fermostat.cpp **** 	}
+  70:fermostat.cpp **** }
+  71:fermostat.cpp **** 
+  72:fermostat.cpp **** short getTemp(short pin)
+  73:fermostat.cpp **** {
+  49               		.loc 1 73 0
+  50               	.LVL2:
+  51               	/* prologue: function */
+  52               	/* frame size = 0 */
+  53               	/* stack size = 0 */
+  54               	.L__stack_usage = 0
+  55               	.LBB2:
+  74:fermostat.cpp **** 	long me = analogRead(pin);
+  56               		.loc 1 74 0
+  57 0038 0E94 0000 		call _Z10analogReads
+  58               	.LVL3:
+  75:fermostat.cpp **** 	
+  76:fermostat.cpp **** 	me *= VREF;
+  59               		.loc 1 76 0
+  60 003c 2FEE      		ldi r18,lo8(-17)
+  61 003e 31E0      		ldi r19,lo8(1)
+  62 0040 DC01      		movw r26,r24
+  63 0042 0E94 0000 		call __usmulhisi3
+  64               	.LVL4:
+  77:fermostat.cpp **** 	me /= 1024;
+  65               		.loc 1 77 0
+  66 0046 20E0      		ldi r18,0
+  67 0048 34E0      		ldi r19,lo8(4)
+  68 004a 40E0      		ldi r20,0
+  69 004c 50E0      		ldi r21,0
+  70 004e 0E94 0000 		call __divmodsi4
+  71               	.LVL5:
+  78:fermostat.cpp **** 	me -= 273;
+  72               		.loc 1 78 0
+  73 0052 2151      		subi r18,17
+  74 0054 3140      		sbci r19,1
+  75 0056 4109      		sbc r20,__zero_reg__
+  76 0058 5109      		sbc r21,__zero_reg__
+  77               	.LVL6:
+  78               	.LBE2:
+  79:fermostat.cpp **** 	return (short) me;
+  80:fermostat.cpp **** }
+  79               		.loc 1 80 0
+  80 005a C901      		movw r24,r18
+  81 005c 0895      		ret
+  82               	.LFE4:
+  84               	.global	_Z8switchOnv
+  86               	_Z8switchOnv:
+  87               	.LFB2:
+  50:fermostat.cpp **** {
+  88               		.loc 1 50 0
+  89 005e CF92      		push r12
+  90               	.LCFI0:
+  91 0060 DF92      		push r13
+  92               	.LCFI1:
+  93 0062 EF92      		push r14
+  94               	.LCFI2:
+  95 0064 FF92      		push r15
+  96               	.LCFI3:
+  97               	/* prologue: function */
+  98               	/* frame size = 0 */
+  99               	/* stack size = 4 */
+ 100               	.L__stack_usage = 4
+  51:fermostat.cpp **** 	if(timeOff + minOff < seconds())
+ 101               		.loc 1 51 0
+ 102 0066 C090 0000 		lds r12,timeOff
+ 103 006a D090 0000 		lds r13,timeOff+1
+ 104 006e E090 0000 		lds r14,timeOff+2
+ 105 0072 F090 0000 		lds r15,timeOff+3
+ 106 0076 8CE2      		ldi r24,44
+ 107 0078 C80E      		add r12,r24
+ 108 007a 81E0      		ldi r24,1
+ 109 007c D81E      		adc r13,r24
+ 110 007e E11C      		adc r14,__zero_reg__
+ 111 0080 F11C      		adc r15,__zero_reg__
+ 112 0082 0E94 0000 		call _Z7secondsv
+ 113               	.LVL7:
+ 114 0086 C616      		cp r12,r22
+ 115 0088 D706      		cpc r13,r23
+ 116 008a E806      		cpc r14,r24
+ 117 008c F906      		cpc r15,r25
+ 118 008e 00F0      		brlo .L4
+  55:fermostat.cpp **** 	if(getTemp(sensorPin)>maxTemp)
+ 119               		.loc 1 55 0
+ 120 0090 85E2      		ldi r24,lo8(37)
+ 121 0092 90E0      		ldi r25,0
+ 122 0094 0E94 0000 		call _Z7getTemps
+ 123               	.LVL8:
+ 124 0098 C897      		sbiw r24,56
+ 125 009a 04F4      		brge .L4
+  60:fermostat.cpp **** 	digitalWrite(relayPin, HIGH);
+ 126               		.loc 1 60 0
+ 127 009c 61E0      		ldi r22,lo8(1)
+ 128 009e 88E0      		ldi r24,lo8(8)
+ 129 00a0 0E94 0000 		call _Z12digitalWritecc
+ 130               	.LVL9:
+  61:fermostat.cpp **** 	timeOff = -1;
+ 131               		.loc 1 61 0
+ 132 00a4 8FEF      		ldi r24,lo8(-1)
+ 133 00a6 9FEF      		ldi r25,lo8(-1)
+ 134 00a8 DC01      		movw r26,r24
+ 135 00aa 8093 0000 		sts timeOff,r24
+ 136 00ae 9093 0000 		sts timeOff+1,r25
+ 137 00b2 A093 0000 		sts timeOff+2,r26
+ 138 00b6 B093 0000 		sts timeOff+3,r27
+ 139               	.L4:
+ 140               	/* epilogue start */
+  62:fermostat.cpp **** }
+ 141               		.loc 1 62 0
+ 142 00ba FF90      		pop r15
+ 143 00bc EF90      		pop r14
+ 144 00be DF90      		pop r13
+ 145 00c0 CF90      		pop r12
+ 146 00c2 0895      		ret
+ 147               	.LFE2:
+ 149               	.global	_Z9checkTempv
+ 151               	_Z9checkTempv:
+ 152               	.LFB1:
+  41:fermostat.cpp **** {
+ 153               		.loc 1 41 0
+ 154               	/* prologue: function */
+ 155               	/* frame size = 0 */
+ 156               	/* stack size = 0 */
+ 157               	.L__stack_usage = 0
+  42:fermostat.cpp **** 	if(getTemp(sensorPin) > setTemp + hyst)
+ 158               		.loc 1 42 0
+ 159 00c4 85E2      		ldi r24,lo8(37)
+ 160 00c6 90E0      		ldi r25,0
+ 161 00c8 0E94 0000 		call _Z7getTemps
+ 162               	.LVL10:
+ 163 00cc 2091 0000 		lds r18,setTemp
+ 164 00d0 3091 0000 		lds r19,setTemp+1
+ 165 00d4 2F5F      		subi r18,-1
+ 166 00d6 3F4F      		sbci r19,-1
+ 167 00d8 2817      		cp r18,r24
+ 168 00da 3907      		cpc r19,r25
+ 169 00dc 04F4      		brge .L9
+  44:fermostat.cpp **** 		switchOn();
+ 170               		.loc 1 44 0
+ 171 00de 0C94 0000 		jmp _Z8switchOnv
+ 172               	.LVL11:
+ 173               	.L9:
+  47:fermostat.cpp **** 		switchOff();
+ 174               		.loc 1 47 0
+ 175 00e2 0C94 0000 		jmp _Z9switchOffv
+ 176               	.LVL12:
+ 177               	.LFE1:
+ 179               		.section	.rodata.str1.1,"aMS",@progbits,1
+ 180               	.LC0:
+ 181 0000 7465 6D70 		.string	"temp is %d\n\r"
+ 181      2069 7320 
+ 181      2564 0A0D 
+ 181      00
+ 182               	.LC1:
+ 183 000d 7069 6E20 		.string	"pin %d %d \n\r"
+ 183      2564 2025 
+ 183      6420 0A0D 
+ 183      00
+ 184               	.LC2:
+ 185 001a 7365 7470 		.string	"setpoint is %d\n\r"
+ 185      6F69 6E74 
+ 185      2069 7320 
+ 185      2564 0A0D 
+ 185      00
+ 186               	.LC3:
+ 187 002b 6572 726F 		.string	"error \n\r"
+ 187      7220 0A0D 
+ 187      00
+ 188               		.text
+ 189               	.global	_Z5doCmdv
+ 191               	_Z5doCmdv:
+ 192               	.LFB5:
+  81:fermostat.cpp **** void doCmd()
+  82:fermostat.cpp **** {
+ 193               		.loc 1 82 0
+ 194               	/* prologue: function */
+ 195               	/* frame size = 0 */
+ 196               	/* stack size = 0 */
+ 197               	.L__stack_usage = 0
+  83:fermostat.cpp **** 	switch(cmd[0])
+ 198               		.loc 1 83 0
+ 199 00e6 8091 0000 		lds r24,cmd
+ 200 00ea 8F36      		cpi r24,lo8(111)
+ 201 00ec 01F0      		breq .L13
+ 202 00ee 8337      		cpi r24,lo8(115)
+ 203 00f0 01F0      		breq .L14
+ 204 00f2 8736      		cpi r24,lo8(103)
+ 205 00f4 01F0      		breq .+2
+ 206 00f6 00C0      		rjmp .L16
+  84:fermostat.cpp **** 	{
+  85:fermostat.cpp **** 		case 'g':
+  86:fermostat.cpp **** 			if(cmd[1] == 'e' && cmd[2] == 't')
+ 207               		.loc 1 86 0
+ 208 00f8 8091 0000 		lds r24,cmd+1
+ 209 00fc 8536      		cpi r24,lo8(101)
+ 210 00fe 01F0      		breq .+2
+ 211 0100 00C0      		rjmp .L10
+ 212               		.loc 1 86 0 is_stmt 0 discriminator 1
+ 213 0102 8091 0000 		lds r24,cmd+2
+ 214 0106 8437      		cpi r24,lo8(116)
+ 215 0108 01F0      		breq .+2
+ 216 010a 00C0      		rjmp .L10
+  87:fermostat.cpp **** 			{
+  88:fermostat.cpp **** 				printf("temp is %d\n\r",getTemp(sensorPin));
+ 217               		.loc 1 88 0 is_stmt 1
+ 218 010c 85E2      		ldi r24,lo8(37)
+ 219 010e 90E0      		ldi r25,0
+ 220 0110 0E94 0000 		call _Z7getTemps
+ 221               	.LVL13:
+ 222 0114 9F93      		push r25
+ 223               	.LCFI4:
+ 224 0116 8F93      		push r24
+ 225               	.LCFI5:
+ 226 0118 80E0      		ldi r24,lo8(.LC0)
+ 227 011a 90E0      		ldi r25,hi8(.LC0)
+ 228 011c 00C0      		rjmp .L17
+ 229               	.L13:
+ 230               	.LCFI6:
+  89:fermostat.cpp **** 			}
+  90:fermostat.cpp **** 			break;
+  91:fermostat.cpp **** 		case 'o':
+  92:fermostat.cpp **** 			if(cmd[1] == '1' && (cmd[2]=='0' || cmd[2]=='1'))
+ 231               		.loc 1 92 0
+ 232 011e 8091 0000 		lds r24,cmd+1
+ 233 0122 8133      		cpi r24,lo8(49)
+ 234 0124 01F0      		breq .+2
+ 235 0126 00C0      		rjmp .L10
+ 236               		.loc 1 92 0 is_stmt 0 discriminator 1
+ 237 0128 6091 0000 		lds r22,cmd+2
+ 238 012c 6053      		subi r22,lo8(-(-48))
+ 239 012e 6230      		cpi r22,lo8(2)
+ 240 0130 00F0      		brlo .+2
+ 241 0132 00C0      		rjmp .L10
+  93:fermostat.cpp **** 			{
+  94:fermostat.cpp **** 				digitalWrite(relayPin, cmd[2]-'0');
+ 242               		.loc 1 94 0 is_stmt 1
+ 243 0134 88E0      		ldi r24,lo8(8)
+ 244 0136 0E94 0000 		call _Z12digitalWritecc
+ 245               	.LVL14:
+  95:fermostat.cpp **** 				printf("pin %d %d \n\r", relayPin,  cmd[2]-'0');
+ 246               		.loc 1 95 0
+ 247 013a 8091 0000 		lds r24,cmd+2
+ 248 013e 90E0      		ldi r25,0
+ 249 0140 C097      		sbiw r24,48
+ 250 0142 9F93      		push r25
+ 251               	.LCFI7:
+ 252 0144 8F93      		push r24
+ 253               	.LCFI8:
+ 254 0146 1F92      		push __zero_reg__
+ 255               	.LCFI9:
+ 256 0148 88E0      		ldi r24,lo8(8)
+ 257 014a 8F93      		push r24
+ 258               	.LCFI10:
+ 259 014c 80E0      		ldi r24,lo8(.LC1)
+ 260 014e 90E0      		ldi r25,hi8(.LC1)
+ 261 0150 9F93      		push r25
+ 262               	.LCFI11:
+ 263 0152 8F93      		push r24
+ 264               	.LCFI12:
+ 265 0154 0E94 0000 		call printf
+ 266               	.LVL15:
+ 267 0158 0F90      		pop __tmp_reg__
+ 268 015a 0F90      		pop __tmp_reg__
+ 269 015c 0F90      		pop __tmp_reg__
+ 270 015e 0F90      		pop __tmp_reg__
+ 271 0160 0F90      		pop __tmp_reg__
+ 272 0162 0F90      		pop __tmp_reg__
+ 273               	.LCFI13:
+ 274 0164 0895      		ret
+ 275               	.L14:
+  96:fermostat.cpp **** 			}			
+  97:fermostat.cpp **** 			break;
+  98:fermostat.cpp **** 		case 's':
+  99:fermostat.cpp **** 			if(cmd[1] >= '0' && cmd[1] <= '9')
+ 276               		.loc 1 99 0
+ 277 0166 2091 0000 		lds r18,cmd+1
+ 278 016a 822F      		mov r24,r18
+ 279 016c 8053      		subi r24,lo8(-(-48))
+ 280 016e 8A30      		cpi r24,lo8(10)
+ 281 0170 00F4      		brsh .L10
+ 100:fermostat.cpp **** 			{
+ 101:fermostat.cpp **** 				if(cmd[2] >= '0' && cmd[2] <= '9')
+ 282               		.loc 1 101 0
+ 283 0172 8091 0000 		lds r24,cmd+2
+ 284 0176 982F      		mov r25,r24
+ 285 0178 9053      		subi r25,lo8(-(-48))
+ 286 017a 9A30      		cpi r25,lo8(10)
+ 287 017c 00F4      		brsh .L10
+ 102:fermostat.cpp **** 				{
+ 103:fermostat.cpp **** 					setTemp = (10*(cmd[1]-'0'))+(cmd[2]-'0');
+ 288               		.loc 1 103 0
+ 289 017e 90E0      		ldi r25,0
+ 290 0180 3AE0      		ldi r19,lo8(10)
+ 291 0182 239F      		mul r18,r19
+ 292 0184 800D      		add r24,r0
+ 293 0186 911D      		adc r25,r1
+ 294 0188 1124      		clr __zero_reg__
+ 295 018a 8051      		subi r24,16
+ 296 018c 9240      		sbci r25,2
+ 297 018e 9093 0000 		sts setTemp+1,r25
+ 298 0192 8093 0000 		sts setTemp,r24
+ 104:fermostat.cpp **** 					printf("setpoint is %d\n\r", setTemp);
+ 299               		.loc 1 104 0
+ 300 0196 9F93      		push r25
+ 301               	.LCFI14:
+ 302 0198 8F93      		push r24
+ 303               	.LCFI15:
+ 304 019a 80E0      		ldi r24,lo8(.LC2)
+ 305 019c 90E0      		ldi r25,hi8(.LC2)
+ 306               	.L17:
+ 307 019e 9F93      		push r25
+ 308               	.LCFI16:
+ 309 01a0 8F93      		push r24
+ 310               	.LCFI17:
+ 311 01a2 0E94 0000 		call printf
+ 312               	.LVL16:
+ 313 01a6 0F90      		pop __tmp_reg__
+ 314 01a8 0F90      		pop __tmp_reg__
+ 315 01aa 0F90      		pop __tmp_reg__
+ 316 01ac 0F90      		pop __tmp_reg__
+ 317               	.LCFI18:
+ 318 01ae 0895      		ret
+ 319               	.L16:
+ 105:fermostat.cpp **** 				}
+ 106:fermostat.cpp **** 			}
+ 107:fermostat.cpp **** 			break;
+ 108:fermostat.cpp **** 		default:
+ 109:fermostat.cpp **** 			printf("error \n\r");
+ 320               		.loc 1 109 0
+ 321 01b0 80E0      		ldi r24,lo8(.LC3)
+ 322 01b2 90E0      		ldi r25,hi8(.LC3)
+ 323 01b4 9F93      		push r25
+ 324               	.LCFI19:
+ 325 01b6 8F93      		push r24
+ 326               	.LCFI20:
+ 327 01b8 0E94 0000 		call printf
+ 328               	.LVL17:
+ 110:fermostat.cpp **** 			break;
+ 329               		.loc 1 110 0
+ 330 01bc 0F90      		pop __tmp_reg__
+ 331 01be 0F90      		pop __tmp_reg__
+ 332               	.LCFI21:
+ 333               	.L10:
+ 334 01c0 0895      		ret
+ 335               	.LFE5:
+ 337               	.global	_Z9fermostatv
+ 339               	_Z9fermostatv:
+ 340               	.LFB6:
+ 111:fermostat.cpp **** 	}
+ 112:fermostat.cpp **** }
+ 113:fermostat.cpp **** void fermostat()
+ 114:fermostat.cpp **** {
+ 341               		.loc 1 114 0
+ 342 01c2 CF93      		push r28
+ 343               	.LCFI22:
+ 344 01c4 DF93      		push r29
+ 345               	.LCFI23:
+ 346               	/* prologue: function */
+ 347               	/* frame size = 0 */
+ 348               	/* stack size = 2 */
+ 349               	.L__stack_usage = 2
+ 350               	.LBB3:
+ 115:fermostat.cpp **** //first part of this is going to get chars from the serial and either discard them or put them in t
+ 116:fermostat.cpp **** 	int me = getchar();
+ 351               		.loc 1 116 0
+ 352 01c6 8091 0000 		lds r24,__iob
+ 353 01ca 9091 0000 		lds r25,__iob+1
+ 354 01ce 0E94 0000 		call fgetc
+ 355               	.LVL18:
+ 356 01d2 EC01      		movw r28,r24
+ 357               	.LVL19:
+ 117:fermostat.cpp **** 	
+ 118:fermostat.cpp **** 	if(me > -1)
+ 358               		.loc 1 118 0
+ 359 01d4 97FD      		sbrc r25,7
+ 360 01d6 00C0      		rjmp .L20
+ 119:fermostat.cpp **** 	{
+ 120:fermostat.cpp **** 		putchar(me);
+ 361               		.loc 1 120 0
+ 362 01d8 6091 0000 		lds r22,__iob+2
+ 363 01dc 7091 0000 		lds r23,__iob+2+1
+ 364 01e0 0E94 0000 		call fputc
+ 365               	.LVL20:
+ 121:fermostat.cpp **** 		if (me == 'f')
+ 366               		.loc 1 121 0
+ 367 01e4 C636      		cpi r28,102
+ 368 01e6 D105      		cpc r29,__zero_reg__
+ 369 01e8 01F4      		brne .L21
+ 122:fermostat.cpp **** 		{
+ 123:fermostat.cpp **** 			index = 0;
+ 370               		.loc 1 123 0
+ 371 01ea 1092 0000 		sts index+1,__zero_reg__
+ 372 01ee 1092 0000 		sts index,__zero_reg__
+ 373 01f2 00C0      		rjmp .L20
+ 374               	.L21:
+ 124:fermostat.cpp **** 		}
+ 125:fermostat.cpp **** 		else if(index < 3 && index > -1)
+ 375               		.loc 1 125 0
+ 376 01f4 8091 0000 		lds r24,index
+ 377 01f8 9091 0000 		lds r25,index+1
+ 378 01fc 8330      		cpi r24,3
+ 379 01fe 9105      		cpc r25,__zero_reg__
+ 380 0200 00F4      		brsh .L20
+ 126:fermostat.cpp **** 		{
+ 127:fermostat.cpp **** 			cmd[index] = me;
+ 381               		.loc 1 127 0
+ 382 0202 FC01      		movw r30,r24
+ 383 0204 E050      		subi r30,lo8(-(cmd))
+ 384 0206 F040      		sbci r31,hi8(-(cmd))
+ 385 0208 C083      		st Z,r28
+ 128:fermostat.cpp **** 			index++;
+ 386               		.loc 1 128 0
+ 387 020a 0196      		adiw r24,1
+ 388 020c 9093 0000 		sts index+1,r25
+ 389 0210 8093 0000 		sts index,r24
+ 390               	.L20:
+ 129:fermostat.cpp **** 		}
+ 130:fermostat.cpp **** 
+ 131:fermostat.cpp **** 	}	
+ 132:fermostat.cpp **** 	if(index == 3)
+ 391               		.loc 1 132 0
+ 392 0214 8091 0000 		lds r24,index
+ 393 0218 9091 0000 		lds r25,index+1
+ 394 021c 0397      		sbiw r24,3
+ 395 021e 01F4      		brne .L18
+ 133:fermostat.cpp **** 	{
+ 134:fermostat.cpp **** 		doCmd();
+ 396               		.loc 1 134 0
+ 397 0220 0E94 0000 		call _Z5doCmdv
+ 398               	.LVL21:
+ 135:fermostat.cpp **** 		index = -1;
+ 399               		.loc 1 135 0
+ 400 0224 8FEF      		ldi r24,lo8(-1)
+ 401 0226 9FEF      		ldi r25,lo8(-1)
+ 402 0228 9093 0000 		sts index+1,r25
+ 403 022c 8093 0000 		sts index,r24
+ 404               	.L18:
+ 405               	/* epilogue start */
+ 406               	.LBE3:
+ 136:fermostat.cpp **** 	}
+ 137:fermostat.cpp **** }
+ 407               		.loc 1 137 0
+ 408 0230 DF91      		pop r29
+ 409 0232 CF91      		pop r28
+ 410               	.LVL22:
+ 411 0234 0895      		ret
+ 412               	.LFE6:
+ 414               	.global	timeOff
+ 415               		.section .bss
+ 418               	timeOff:
+ 419 0000 0000 0000 		.zero	4
+ 420               	.global	setTemp
+ 421               		.data
+ 424               	setTemp:
+ 425 0000 1400      		.word	20
+ 426               	.global	index
+ 429               	index:
+ 430 0002 FFFF      		.word	-1
+ 431               	.global	cmd
+ 432               		.section .bss
+ 435               	cmd:
+ 436 0004 0000 00   		.zero	3
+ 611               	.Letext0:
+ 612               		.file 2 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/stdio.h"
+ 613               		.file 3 "digitalIO.h"
+ 614               		.file 4 "analogIO.h"
+ 615               		.file 5 "/usr/lib/gcc/avr/4.7.0/../../../avr/include/stdint.h"
+ 616               		.file 6 "timer.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 fermostat.cpp
+     /tmp/ccjVr8ic.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccjVr8ic.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccjVr8ic.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccjVr8ic.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccjVr8ic.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccjVr8ic.s:11     .text:0000000000000000 _Z9switchOffv
+     /tmp/ccjVr8ic.s:418    .bss:0000000000000000 timeOff
+     /tmp/ccjVr8ic.s:47     .text:0000000000000038 _Z7getTemps
+     /tmp/ccjVr8ic.s:86     .text:000000000000005e _Z8switchOnv
+     /tmp/ccjVr8ic.s:151    .text:00000000000000c4 _Z9checkTempv
+     /tmp/ccjVr8ic.s:424    .data:0000000000000000 setTemp
+     /tmp/ccjVr8ic.s:191    .text:00000000000000e6 _Z5doCmdv
+     /tmp/ccjVr8ic.s:435    .bss:0000000000000004 cmd
+     /tmp/ccjVr8ic.s:339    .text:00000000000001c2 _Z9fermostatv
+     /tmp/ccjVr8ic.s:429    .data:0000000000000002 index
+
+UNDEFINED SYMBOLS
+_Z12digitalWritecc
+_Z7secondsv
+_Z10analogReads
+__usmulhisi3
+__divmodsi4
+printf
+__iob
+fgetc
+fputc
+__do_copy_data
+__do_clear_bss
