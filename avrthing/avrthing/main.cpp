@@ -5,6 +5,8 @@
 #include <avr/pgmspace.h>
 #include "pins/awesomedip.h"
 #include "fermostat.h"
+#include <avr/wdt.h>
+
 
 char buf[10];
 
@@ -16,6 +18,10 @@ int main(void)
 	
 	int i = 0;
 	int pin = 0;
+
+
+	wdt_enable(WDTO_500MS);
+
 	initUSBSerial();
 	initRTC();
  	
@@ -23,7 +29,8 @@ int main(void)
 	setRefVCC();
 	pin = setPin(37);
  	setDirection(8, 1);	
-
+	
+	
 	while(true)
 	{
 		runUSB();
@@ -37,6 +44,7 @@ void loop(void)
 {
 	fermostat();
 //	printf("looped\n\r");
+	wdt_reset();
 
 }
 void delaySec(unsigned int t)

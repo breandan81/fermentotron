@@ -134,5 +134,7 @@ void fermostat()
 		doCmd();
 		index = -1;
 	}
+
+	checkTemp();
 }
 
