@@ -2,7 +2,7 @@
 #include "fermostat.h"
 #include <stdlib.h>
 #include <stdio.h>
-
+#include "timer.h"
 /*---
 Command set:
 
@@ -33,8 +33,9 @@ void switchOff();
 //globals
 char cmd[3];
 int index = -1;
-int setTemp = 20;
+int setTemp = 30;
 unsigned long timeOff = 0;
+bool isOn = 0;
 //end globals
 
 void checkTemp()
@@ -48,24 +49,26 @@ void checkTemp()
 }
 void switchOn()
 {
-	if(timeOff + minOff < seconds())
+	if((timeOff + minOff) > seconds())
 	{
 		return;
 	}
+	else
 	if(getTemp(sensorPin)>maxTemp)
 	{
 		return;
 	}
-	
+	else
+	isOn = true;
 	digitalWrite(relayPin, HIGH);
-	timeOff = -1;
 }
 void switchOff()
 {
-	if(timeOff == -1) //then we're on, otherwise don't do anything
+	if(isOn) //then we're on, otherwise don't do anything
 	{
 		digitalWrite(relayPin, LOW);
 		timeOff = seconds();
+		isOn = false;
 	}
 }
 
@@ -105,6 +108,13 @@ void doCmd()
 				}
 			}
 			break;
+		case 't':
+			{	
+				if(cmd[1] == 'i' && cmd[2] == 'm')
+				{
+					printf("timeon = %d seconds = %d isOn = %d \n\r", (short)timeOff, (short)seconds(), (short)isOn);
+				}
+			}	
 		default:
 			printf("error \n\r");
 			break;

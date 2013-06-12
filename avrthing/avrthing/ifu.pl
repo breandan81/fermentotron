@@ -1,16 +1,10 @@
 #!/usr/bin/perl
 
-
-open (INSER, '</dev/ttyACM0');
-open (OUTSER, '>>/dev/ttyACM0');
-
-print "starting\n";
-
-while(1)
+while(true)
 {
-	$a = <STDIN>;	
-	print OUTSER $a;
-	$s = <INSER>;
-	print $s;
+`./fetchtemp.pl`;
+
+`sshpass -p '0mgz0mb33s' scp /home/breandan/freezerlog breandan81\@avrthing.com:/home/breandan81/avrthing.com/freezerlog`;
+sleep(5);
 }
 
