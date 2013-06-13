@@ -43,7 +43,7 @@ void checkTemp()
 {
 	int me = 100;
 	me = eeprom_read_byte((uint8_t*)1);
-
+	setTemp = me;
 	if(getTemp(sensorPin) > me + hyst)
 	{
 		switchOn();
@@ -144,7 +144,7 @@ void fermostat()
 	
 	if(me > -1)
 	{
-		putchar(me);
+		//putchar(me);
 		if (me == 'f')
 		{
 			index = 0;
