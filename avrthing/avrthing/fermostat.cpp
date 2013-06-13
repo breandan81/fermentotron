@@ -1,3 +1,4 @@
+#include <avr/eeprom.h>
 #include "avrthing.h"
 #include "fermostat.h"
 #include <stdlib.h>
@@ -10,7 +11,7 @@ sxx set temp to xx
 get get temp
 o11 turn on
 o10 turn off
-
+log output csv log entry
 ------*/
 //constants
 #define maxTemp 55
@@ -40,12 +41,17 @@ bool isOn = 0;
 
 void checkTemp()
 {
-	if(getTemp(sensorPin) > setTemp + hyst)
+	int me = 100;
+	me = eeprom_read_byte((uint8_t*)1);
+
+	if(getTemp(sensorPin) > me + hyst)
 	{
 		switchOn();
 	}
-	else
+	else if(getTemp(sensorPin) < me - hyst)
+	{
 		switchOff();
+	}
 }
 void switchOn()
 {
@@ -104,6 +110,8 @@ void doCmd()
 				if(cmd[2] >= '0' && cmd[2] <= '9')
 				{
 					setTemp = (10*(cmd[1]-'0'))+(cmd[2]-'0');
+					char me = setTemp;
+					eeprom_write_byte((uint8_t*)1, me);
 					printf("setpoint is %d\n\r", setTemp);
 				}
 			}
@@ -115,6 +123,15 @@ void doCmd()
 					printf("timeon = %d seconds = %d isOn = %d \n\r", (short)timeOff, (short)seconds(), (short)isOn);
 				}
 			}	
+			break;
+		case 'l':
+			{
+				if(cmd[1] == 'o' && cmd[2] == 'g')
+				{
+					printf("%lu, %lu, %d, %d, %d \n", timeOff, seconds(), isOn, getTemp(sensorPin), setTemp);
+				}
+			}
+			break;
 		default:
 			printf("error \n\r");
 			break;

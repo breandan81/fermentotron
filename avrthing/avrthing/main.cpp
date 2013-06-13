@@ -20,7 +20,7 @@ int main(void)
 	int pin = 0;
 
 
-//	wdt_enable(WDTO_500MS);
+	wdt_enable(WDTO_500MS);
 
 	initUSBSerial();
 	initRTC();
@@ -44,7 +44,7 @@ void loop(void)
 {
 	fermostat();
 //	printf("looped\n\r");
-	//wdt_reset();
+	wdt_reset();
 
 }
 void delaySec(unsigned int t)
